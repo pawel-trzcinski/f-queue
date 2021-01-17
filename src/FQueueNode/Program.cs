@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using CommandLine;
+using FQueue;
 using FQueue.Settings;
 using log4net;
 using log4net.Config;
@@ -25,7 +28,6 @@ namespace FQueueNode
     // POST /{queueName}/Enqueue
     // GET /{queueName}/Backup?filename={filename} - jak bez nazwy pliku, to standardowa nazwa - zwraca ścieżkę, gdzie backup został zrobiony
     // 
-#warning TODO - kontroler ma path "fqueue"
 #warning TODO - każda z operacji zwraca ustalony kod błędu, że "Backup Pending" jak backup trwa
     // 
     // 
@@ -41,7 +43,7 @@ namespace FQueueNode
 #warning TODO - generator xlsx, który pokazuje czasy każdej operacji - do porównywania czy zmiany, które zrobiliśmy poprawiają wydajność czy nie
 #warning TODO - ograniczenie ilości elementów trzymanych w pamięci
 #warning TODO - ograniczenie pamięci zużywanej przez proces
-#warning TODO - ograniczenie wielkości pojedyńczego pliku bazy - minimum 50MB, maximum 
+#warning TODO - ograniczenie wielkości pojedyńczego pliku bazy - minimum 50MB, maximum
 #warning TODO - w każdym repozytorium jest plik z wersją (Guid;czas UTC;bieżący plik bazy; bieżący wskaźnik w pliku) node przy każdej operacji czyta plik z wersją i porównuje; jak różne, to resetuje bufor w pamięci
 #warning TODO - enqueue i dequeue zmienia wersję
 #warning TODO - bufor w pamięci dopełnia się w tle po każdym dequeue
@@ -49,23 +51,34 @@ namespace FQueueNode
 #warning TODO - każdy element bufora w pamięci posiada nazwę pliku i wskaźnik w pliku na jaki należy przestawić biezący wskaźnik o operacji dequeue tego elementu
 #warning TODO - struktura plików (100 plików w folderze nazwanych 00-99; foldery wewnętrzne o nazwach 00-99; foldery zewnętrzne o nazwach 00000000-99999999 - 8 cyfr; nazwa kolejki )
 #warning TODO - backup wszystkiego
-#warning TODO - REST throttling
 #warning TODO - file handler ma odpalonych na stałe tyle workerów ile jest repozytoriów (żeby nie tworzyć wielu wątków za każdym razem)
 #warning TODO - file handler odpowiada za synchroniczny update plików danych i pliku wersji - jakiś command pattern z możliwością rollbacku
 #warning TODO - cykliczne, niezależne porównywanie (jakaś synchronizacja z FileHandler - a może to kolejna operacja FileHandler?) spójności danych we repo (klika harmonogramów: {kiedy + moc sprawdzania})
 #warning TODO - każde wykrycie braku synchronizacji - wywalenie serwisu
+#warning TODO - przykładowy dockerfile
+#warning TODO - przykładowy compose z definiowalną ilością Node'ów - czy da się?
     public static class Program
     {
         private static ILog _log = LogManager.GetLogger(typeof(Program));
+
+        public const string DEFAULT_CONFIGURATION_FILENAME = "./appsettings.json";
+
+        private static readonly AutoResetEvent _closing = new AutoResetEvent(false);
+        private static readonly TimeSpan _closingTimeout = TimeSpan.FromSeconds(10);
+        private static Task<int> _mainTask;
+        private static IEngine _engine;
 
         public static int Main(string[] args)
         {
             ConfigureLog4Net();
 
-            _log.Info("Starting FQueueSynchronizerHost");
+            _log.Info("Starting FQueueNode");
 
-            try
+            try 
             {
+                AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+                AssemblyLoadContext.Default.Unloading += Default_Unloading;
+
                 return ParseArgumentsAndExecute(args);
             }
             catch (Exception ex)
@@ -100,24 +113,26 @@ namespace FQueueNode
         {
             ParserResult<CommandLineArguments> parseResult = Parser.Default.ParseArguments<CommandLineArguments>(args);
 
-            //_container = ConfigureInjectionContainer(parseResult.TypeInfo.Current);
-            //_container.GetInstance<IDateTimeService>().RegisterApplicationStartTime();
-
             _log.Info($"Parsing program arguments: {String.Join(" ", args)}");
             return parseResult.MapResult
             (
-                (CommandLineArguments commandLineArguments) =>
+                commandLineArguments =>
                 {
-                    // to wszystko poniżej powinien engine robić itp
-#warning TODO - zbadaj spójność danych i czy we wszystkich repozytoriach jest to samo (np to co w pliku wersji musi się odnosić do realnej sytuacji na dysku)
-#warning TODO - konfigurowalna moc sprawdzania spójności przy starcie (same pliki wersji, struktura katalogów i plików, wsie dane - w kilku wątkach porównujemy pliki)
-#warning TODO - startuj wątki i poczekaj aż się wsio odpali
-#warning TODO - odpal hosta REST
-                    _log.Debug("list verb selected");
+                    _log.Info("Initializing injection container");
+                    _engine = ContainerRegistrator
+                        .Register(String.IsNullOrWhiteSpace(commandLineArguments.ConfigurationFilePath) ? DEFAULT_CONFIGURATION_FILENAME : commandLineArguments.ConfigurationFilePath)
+                        .GetInstance<IEngine>();
 
-                    //_container.GetInstance<IListEngine>().Execute(CommandLineOptions.FromCommandLineArguments(commandLineArguments));
+                    _mainTask = Task.Run(() =>
+                    {
+                        _engine.Start();
+                        return 0;
+                    });
 
-                    return 0;
+                    Console.CancelKeyPress += OnExit;
+                    _closing.WaitOne();
+
+                    return _mainTask.Result;
                 },
                 notParsedErrors =>
                 {
@@ -150,5 +165,38 @@ namespace FQueueNode
 
             throw new ArgumentException(sb.ToString());
         }
+
+        private static void Default_Unloading(AssemblyLoadContext obj)
+        {
+            _log.Debug(nameof(Default_Unloading));
+        }
+
+        private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            try
+            {
+                _log.Info("Process exiting");
+
+                _engine.Stop();
+
+                _log.Debug("Waiting for main task to end");
+                _mainTask.Wait(_closingTimeout);
+            }
+            catch (Exception ex)
+            {
+                _log.Fatal(ex);
+            }
+            finally
+            {
+                _log.Debug("All is finished");
+            }
+        }
+
+        private static void OnExit(object sender, ConsoleCancelEventArgs args)
+        {
+            _log.Info("Exit invoked");
+            _closing.Set();
+        }
+
     }
 }

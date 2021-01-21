@@ -20,23 +20,8 @@ namespace FQueueNode
     // - Enqueue(1 albo wiele)
     // - Dequeue(1 albo wiele)
     // - Count - super szybka
-    // 
-    // API:
-    // GET /{queueName}/Dequeue? count = 1
-    // GET /{queueName}/Count
-    // GET /{queueName}/Peek
-    // POST /{queueName}/Enqueue
-    // GET /{queueName}/Backup?filename={filename} - jak bez nazwy pliku, to standardowa nazwa - zwraca ścieżkę, gdzie backup został zrobiony
-    // 
-#warning TODO - każda z operacji zwraca ustalony kod błędu, że "Backup Pending" jak backup trwa
-    // 
-    // 
-    // Protokół:
-    // Powtarzaj l razy:
-    // 1B - tag length = n
-    // nB - tag
-    // 2B - msg length = k
-    // kB - msg - read to end
+
+
 
 #warning TODO - nie operujemy wyjątkami
 #warning TODO - nazwa kolejki: duże i małe litery, cyfry, minus, podkreślenie
@@ -44,12 +29,14 @@ namespace FQueueNode
 #warning TODO - ograniczenie ilości elementów trzymanych w pamięci
 #warning TODO - ograniczenie pamięci zużywanej przez proces
 #warning TODO - ograniczenie wielkości pojedyńczego pliku bazy - minimum 50MB, maximum
-#warning TODO - w każdym repozytorium jest plik z wersją (Guid;czas UTC;bieżący plik bazy; bieżący wskaźnik w pliku) node przy każdej operacji czyta plik z wersją i porównuje; jak różne, to resetuje bufor w pamięci
+#warning TODO - w każdym repozytorium jest plik z wersją (Guid;czas UTC;bieżący plik bazy; bieżący wskaźnik w pliku; ostatni plik bazy; wskaźnik ostatniego elementu) node przy każdej operacji czyta plik z wersją i porównuje pierwszy element; jak różne, to resetuje bufor w pamięci
 #warning TODO - enqueue i dequeue zmienia wersję
 #warning TODO - bufor w pamięci dopełnia się w tle po każdym dequeue
 #warning TODO - zrobić jakoś, żeby to wszystko działo się strumieniami, żeby nie było za dużo przepisywania pamięci (może dane odzielnie trzymać w RAM a dane operacyjne, wskaźniki itp. oddizelnie? )
 #warning TODO - każdy element bufora w pamięci posiada nazwę pliku i wskaźnik w pliku na jaki należy przestawić biezący wskaźnik o operacji dequeue tego elementu
 #warning TODO - struktura plików (100 plików w folderze nazwanych 00-99; foldery wewnętrzne o nazwach 00-99; foldery zewnętrzne o nazwach 00000000-99999999 - 8 cyfr; nazwa kolejki )
+#warning TODO - ustawiamy początkowe capacity na 1mln. Jak kolejka osiągnie połowę capacity, to w tle zwiększamy capacity razy 2 - czyli dodajemy wsie foldery
+#warning TODO - jak kolejka jest pusta, to wymuszamy czyszczenie starych plików i zaczynamy od zera
 #warning TODO - backup wszystkiego
 #warning TODO - file handler ma odpalonych na stałe tyle workerów ile jest repozytoriów (żeby nie tworzyć wielu wątków za każdym razem)
 #warning TODO - file handler odpowiada za synchroniczny update plików danych i pliku wersji - jakiś command pattern z możliwością rollbacku
@@ -57,6 +44,12 @@ namespace FQueueNode
 #warning TODO - każde wykrycie braku synchronizacji - wywalenie serwisu
 #warning TODO - przykładowy dockerfile
 #warning TODO - przykładowy compose z definiowalną ilością Node'ów - czy da się?
+#warning TODO - w pliku każdy wpis ma crc32, żeby wiedzieć czy się nic nie zdegradowało na dysku
+#warning TODO - sprawdzanie bazy danych, też sprawdza wsie CRC32
+
+    //BONUS:
+#warning TODO - wspólnie działających wiele instancji - każda ma te same foldery danych przypisane (jakieś sprawdzanie i sync po net) - jakieś sync po sieci na temat tego kto wykonuje operację w danej chwili
+#warning TODO - oddzielny kontroler dla synchronizacji zapytań
     public static class Program
     {
         private static ILog _log = LogManager.GetLogger(typeof(Program));

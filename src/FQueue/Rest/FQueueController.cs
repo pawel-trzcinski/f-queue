@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.IO;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
 using FQueue.Health;
 
 namespace FQueue.Rest
@@ -9,6 +11,14 @@ namespace FQueue.Rest
     [Route("fqueue")]
     public class FQueueController : Controller, IFQueueController
     {
+#warning TODO - przesyłanie strumieniem jest bez sensu, bo base64 string zajmie 2 razy więcej miejsca => posługujemy się tylko xml i json => strumieniowy protokół tylko w plikach
+#warning TODO - operacje czysto tagowe - czyli tak na prawdę zwykły peek i to chyba wsio
+        // GET /{queueName}/Dequeue? count = 1
+        // GET /{queueName}/Count
+        // GET /{queueName}/Peek
+        // POST /{queueName}/Enqueue
+        // GET /{queueName}/Backup?filename={filename} - jak bez nazwy pliku, to standardowa nazwa - zwraca ścieżkę, gdzie backup został zrobiony
+#warning TODO - każda z operacji zwraca ustalony kod błędu, że "Backup Pending" jak backup trwa
 #warning TODO - unit tests
 
         private readonly IHealthChecker _healthChecker;
@@ -26,6 +36,29 @@ namespace FQueue.Rest
         public StatusCodeResult Test()
         {
             return this.Ok();
+        }
+
+        public class Bin3
+        {
+            public string Val { get; set; }
+            public byte[] BytesCheck { get; set; }
+        }
+
+        [HttpGet("bin")]
+        public Bin3 GetBin()
+        {
+            return new Bin3
+            {
+                Val = "Hello World",
+                BytesCheck = new byte[] {5,13,8,23}
+            };
+        }
+
+        [HttpGet("bins")]
+        [Produces("application/octet-stream")]
+        public Stream GetBinStream()
+        {
+            return new MemoryStream(Encoding.UTF8.GetBytes("Hello World"));
         }
 
         //[HttpGet("next")]

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -111,7 +112,14 @@ namespace FQueue
                 {
                     services.AddSingleton(s => _controllerFactory);
                     services.AddLogging();
-                    services.AddMvc(o => { o.EnableEndpointRouting = false; });
+                    services.AddMvc(o => 
+                    {
+                        o.EnableEndpointRouting = false;
+
+                        o.RespectBrowserAcceptHeader = true;
+
+                        o.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+                    });
                     services.AddSwaggerGen(c => { c.SwaggerDoc("fqueue", new OpenApiInfo { Title = "FQueue", Version = "v1" }); });
                 })
                 .Configure(app =>

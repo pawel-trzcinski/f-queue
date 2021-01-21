@@ -34,7 +34,7 @@ namespace FQueue.Rest
             {
                 throw new ArgumentNullException(nameof(context));
             }
-
+            
             Scope scope = ThreadScopedLifestyle.BeginScope(_container);
 
             _log.Debug("Seting Scope feature");

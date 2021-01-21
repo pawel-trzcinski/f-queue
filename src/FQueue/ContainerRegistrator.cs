@@ -1,4 +1,7 @@
-﻿using log4net;
+﻿using FQueue.Context;
+using FQueue.Data;
+using FQueue.Data.V01BasicProtocol;
+using log4net;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using FQueue.DateTime;
 using FQueue.Health;
@@ -23,6 +26,18 @@ namespace FQueue
             container.RegisterSingleton<IDateTimeService, DateTimeService>();
 
             container.RegisterSingleton<IConfigurationReader>(() => new ConfigurationReader(configurationFilename));
+
+            container.RegisterSingleton<IQueueContextFactory, QueueContextFactory>();
+            
+            container.RegisterSingleton<IDataProtocolFactory, DataProtocolFactory>();
+            container.Register
+            (
+                typeof(IDataProtocol),
+                new[]
+                {
+                    typeof(DataProtocolV01)
+                }
+            );
 
             container.RegisterSingleton<IHealthChecker, HealthChecker>();
 

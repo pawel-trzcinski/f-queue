@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Text;
 using log4net;
 using Newtonsoft.Json;
@@ -12,24 +11,19 @@ namespace FQueue.Settings
 #warning TODO - unit tests
         private static readonly ILog _log = LogManager.GetLogger(typeof(FQueueConfiguration));
 
-        public const string DEFAULT_DATA_FOLDER = "/fqueue/data";
-        public const string DEFAULT_BACKUP_FOLDER = "/fqueue/backup";
-
         public RestConfiguration Rest { get; }
 
-        public string[] DataFolders { get; }
-        public string BackupFolder { get; }
+        public FilesConfiguration Files { get; }
 
         public PerformanceConfiguration Performance { get; }
-    
+
 
         [JsonConstructor]
-        public FQueueConfiguration(RestConfiguration rest, string[] dataFolders, string backupFolder, PerformanceConfiguration performance)
+        public FQueueConfiguration(RestConfiguration rest, FilesConfiguration files, PerformanceConfiguration performance)
             : base(nameof(FQueueConfiguration), String.Empty)
         {
             Rest = rest;
-            DataFolders = dataFolders == null || dataFolders.Length == 0 ? new[] {DEFAULT_DATA_FOLDER} : dataFolders;
-            BackupFolder = (backupFolder ?? DEFAULT_BACKUP_FOLDER).Trim('/');
+            Files = files;
             Performance = performance;
 
             ValidateConfiguration();
@@ -38,22 +32,6 @@ namespace FQueue.Settings
         private void ValidateConfiguration()
         {
             _log.Debug($"Validating {nameof(FQueueConfiguration)}");
-
-            foreach (string dataFolder in DataFolders)
-            {
-                string fullDataFolder = Path.GetFullPath(dataFolder);
-                if (String.IsNullOrEmpty(fullDataFolder))
-                {
-                    throw new ArgumentException($"data folder '{dataFolder}' is invalid", nameof(DataFolders));
-                }
-            }
-
-            string fullBackupFolder = Path.GetFullPath(BackupFolder);
-            if (String.IsNullOrEmpty(fullBackupFolder))
-            {
-                throw new ArgumentException($"backup folder '{BackupFolder}' is invalid", nameof(BackupFolder));
-            }
-
             _log.Info($"{nameof(FQueueConfiguration)} valid");
         }
 
@@ -61,11 +39,8 @@ namespace FQueue.Settings
 
         private void ReportConfiguration(StringBuilder sb)
         {
-#warning TODO - unit tests
-            Report(sb, nameof(DataFolders), DataFolders);
-            Report(sb, nameof(BackupFolder), BackupFolder);
-
             Rest.ReportConfiguration(sb);
+            Files.ReportConfiguration(sb);
             Performance.ReportConfiguration(sb);
         }
 

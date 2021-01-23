@@ -1,13 +1,16 @@
 ﻿using System;
-using System.IO;
 using System.Text;
+using FQueue.Context;
+using FQueue.Data;
+using FQueue.Exceptions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace FQueue.Models
 {
-#warning TODO - unit tests
     public class QueueEntry
     {
+#warning TODO - unit tests
         public string Tag { get; private set; }
         public string Data { get; private set; }
         public byte[] DataBytes { get; private set; }
@@ -16,7 +19,7 @@ namespace FQueue.Models
         {
         }
 
-        public static QueueEntry FromRequestString(string bodyRequestString)
+        public static QueueEntry FromRequestString(QueueContext context, string bodyRequestString, int dataFileMaximumSizeB)
         {
             JObject request = JObject.Parse(bodyRequestString);
 
@@ -25,34 +28,24 @@ namespace FQueue.Models
                 throw new ArgumentException($"No {nameof(QueueEntry.Tag)} found in input JSON");
             }
 
+            byte[] dataBytes = Encoding.UTF8.GetBytes(bodyRequestString);
+            int frameSize = DataProtocolAdapter.CalculateFrameSize(dataBytes.Length);
+            if (frameSize < dataFileMaximumSizeB)
+            {
+                throw new TooBigRequestException(context, dataFileMaximumSizeB, dataBytes.Length, frameSize);
+            }
+
             return new QueueEntry
             {
                 Data = bodyRequestString,
                 Tag = token.Value<string>(),
                 DataBytes = Encoding.UTF8.GetBytes(bodyRequestString)
             };
-#warning TODO - walidacja ilości bajtów - może być ich tylko 2^32
         }
 
-        public static QueueEntry FromDataFileStream(Stream inputStream)
+        public static QueueEntry FromBytes(byte[] data)
         {
-            long streamStartPosition = inputStream.Position;
-
-            // throws InvalidCrcException
-#warning TODO
-            return null;
-        }
-
-        public void WriteToStream(Stream stream)
-        {
-#warning TODO
-            // Protokół plikowy:
-            // 1B - start - 55
-            // 1B - wersja protokołu
-            // 2B - ushort msg length = n
-            // nB - msg - read to end
-            // 4B - CRC32 of msg
-            // 1B - end - 4B
+            return JsonConvert.DeserializeObject<QueueEntry>(Encoding.UTF8.GetString(data));
         }
     }
 }

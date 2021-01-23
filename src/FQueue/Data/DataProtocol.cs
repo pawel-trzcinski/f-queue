@@ -1,22 +1,10 @@
-﻿using System.IO;
-using FQueue.Models;
+﻿using FQueue.Models;
 
 namespace FQueue.Data
 {
     public abstract class DataProtocol : IDataProtocol
     {
-        public const byte START_BYTE = 0x55;
-        public const byte END_BYTE = 0x4B;
-
         public DataProtocolVersion Version { get; }
-
-        // Protokół plikowy v1:
-        // 1B - start - 55
-        // 1B - wersja protokołu
-        // 2B - ushort msg length = n
-        // nB - msg - read to end
-        // 4B - CRC32 of ("2B - ushort msg length = n" + "nB - msg - read to end")
-        // 1B - end - 4B
 
         protected DataProtocol(DataProtocolVersion version)
         {
@@ -24,14 +12,13 @@ namespace FQueue.Data
         }
 
         /// <summary>
-        /// Read QueueEqntry from DataFile stream. This method is thread-safe.
+        /// Read QueueEqntry from data stream. This method is thread-safe.
         /// </summary>
-        public abstract QueueEntry ReadEntry(Stream inputStream);
-#warning TODO - czytanie start i end byte; czytanie i sprawdzanie wersji protokołu; czytanie i sprawdzanie crc - przekazywanie do konkretnego protokołu dalej
+        public abstract QueueEntry GetEntry(byte[] data);
 
         /// <summary>
-        /// White QueueEqntry to DataFile stream. This method is thread-safe.
+        /// White QueueEqntry to data stream. This method is thread-safe.
         /// </summary>
-        public abstract void WriteEntry(QueueEntry entry, Stream outputStream);
+        public abstract byte[] GetBytes(QueueEntry entry);
     }
 }

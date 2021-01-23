@@ -15,6 +15,7 @@ namespace FQueue.Exceptions
 
         public override string ToString()
         {
+#warning TODO - unit test
             return $"{base.ToString()}{Environment.NewLine}{Context}";
         }
     }

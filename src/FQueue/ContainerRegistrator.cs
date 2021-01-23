@@ -38,7 +38,8 @@ namespace FQueue
                     typeof(DataProtocolV01)
                 }
             );
-
+            container.RegisterSingleton<IDataProtocolAdapter, DataProtocolAdapter>();
+            
             container.RegisterSingleton<IHealthChecker, HealthChecker>();
 
             container.Register<IFQueueController, FQueueController>(Lifestyle.Scoped);

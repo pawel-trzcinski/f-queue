@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace FQueue.Exceptions
 {
     [Serializable]
-    public class UnsupportedProtocolVersionException : FQueueException
+    public class UnsupportedProtocolVersionException : DataFrameException
     {
         public byte UnsupportedProtocol { get; }
 
@@ -17,6 +17,7 @@ namespace FQueue.Exceptions
 
         public override string ToString()
         {
+#warning TODO - unit test
             return $"{base.ToString()}{Environment.NewLine}UnsupportedProtocol: {UnsupportedProtocol}";
         }
     }

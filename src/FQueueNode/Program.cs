@@ -15,20 +15,11 @@ using log4net.Repository;
 
 namespace FQueueNode
 {
-    // Operacje:
-    // - Peek - super szybka
-    // - Enqueue(1 albo wiele)
-    // - Dequeue(1 albo wiele)
-    // - Count - super szybka
-
-
-
 #warning TODO - nie operujemy wyjątkami
 #warning TODO - nazwa kolejki: duże i małe litery, cyfry, minus, podkreślenie
 #warning TODO - generator xlsx, który pokazuje czasy każdej operacji - do porównywania czy zmiany, które zrobiliśmy poprawiają wydajność czy nie
 #warning TODO - ograniczenie ilości elementów trzymanych w pamięci
 #warning TODO - ograniczenie pamięci zużywanej przez proces
-#warning TODO - ograniczenie wielkości pojedyńczego pliku bazy - minimum 50MB, maximum
 #warning TODO - w każdym repozytorium jest plik z wersją (Guid;czas UTC;bieżący plik bazy; bieżący wskaźnik w pliku; ostatni plik bazy; wskaźnik ostatniego elementu) node przy każdej operacji czyta plik z wersją i porównuje pierwszy element; jak różne, to resetuje bufor w pamięci
 #warning TODO - enqueue i dequeue zmienia wersję
 #warning TODO - bufor w pamięci dopełnia się w tle po każdym dequeue
@@ -44,12 +35,12 @@ namespace FQueueNode
 #warning TODO - każde wykrycie braku synchronizacji - wywalenie serwisu
 #warning TODO - przykładowy dockerfile
 #warning TODO - przykładowy compose z definiowalną ilością Node'ów - czy da się?
-#warning TODO - w pliku każdy wpis ma crc32, żeby wiedzieć czy się nic nie zdegradowało na dysku
 #warning TODO - sprawdzanie bazy danych, też sprawdza wsie CRC32
 
     //BONUS:
 #warning TODO - wspólnie działających wiele instancji - każda ma te same foldery danych przypisane (jakieś sprawdzanie i sync po net) - jakieś sync po sieci na temat tego kto wykonuje operację w danej chwili
 #warning TODO - oddzielny kontroler dla synchronizacji zapytań
+#warning TODO - REST method - Version. Jak się synchronizują, to tylko z taką samą wersją
     public static class Program
     {
         private static ILog _log = LogManager.GetLogger(typeof(Program));

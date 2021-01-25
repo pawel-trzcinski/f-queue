@@ -21,6 +21,7 @@ namespace FQueueNode
 #warning TODO - ograniczenie ilości elementów trzymanych w pamięci
 #warning TODO - ograniczenie pamięci zużywanej przez proces
 #warning TODO - w każdym repozytorium jest plik z wersją (Guid;czas UTC;bieżący plik bazy; bieżący wskaźnik w pliku; ostatni plik bazy; wskaźnik ostatniego elementu) node przy każdej operacji czyta plik z wersją i porównuje pierwszy element; jak różne, to resetuje bufor w pamięci
+#warning TODO - jak ktoś zepsuje plik wersji, to trzeba zsynchronizować; jak wszystkie node'y nie mają pliku, to zakładamy nowe i jedziemy od początku kolejki
 #warning TODO - enqueue i dequeue zmienia wersję
 #warning TODO - bufor w pamięci dopełnia się w tle po każdym dequeue
 #warning TODO - zrobić jakoś, żeby to wszystko działo się strumieniami, żeby nie było za dużo przepisywania pamięci (może dane odzielnie trzymać w RAM a dane operacyjne, wskaźniki itp. oddizelnie? )
@@ -32,14 +33,21 @@ namespace FQueueNode
 #warning TODO - file handler ma odpalonych na stałe tyle workerów ile jest repozytoriów (żeby nie tworzyć wielu wątków za każdym razem)
 #warning TODO - file handler odpowiada za synchroniczny update plików danych i pliku wersji - jakiś command pattern z możliwością rollbacku
 #warning TODO - cykliczne, niezależne porównywanie (jakaś synchronizacja z FileHandler - a może to kolejna operacja FileHandler?) spójności danych we repo (klika harmonogramów: {kiedy + moc sprawdzania})
-#warning TODO - każde wykrycie braku synchronizacji - wywalenie serwisu
+#warning TODO - każde wykrycie braku synchronizacji - przestawienie starszego repozytorium w tryb "synchronizing" (albo wywalamy w pierwotnej wersji) - jak możliwe; (jak ta sama wersja ale nie sync, to wywalamy serwis)
 #warning TODO - przykładowy dockerfile
 #warning TODO - przykładowy compose z definiowalną ilością Node'ów - czy da się?
 #warning TODO - sprawdzanie bazy danych, też sprawdza wsie CRC32
 
     //BONUS:
 #warning TODO - wspólnie działających wiele instancji - każda ma te same foldery danych przypisane (jakieś sprawdzanie i sync po net) - jakieś sync po sieci na temat tego kto wykonuje operację w danej chwili
+    // - można by zrobić dwa albo trzy oddzielne node'y (albo te same instancje), które by robiły leader election i mówiły czy możesz robić operację
 #warning TODO - oddzielny kontroler dla synchronizacji zapytań
+    // albo raczej synchronizacja to by była taka, że:
+    //  - dodajemy na gorąco kolejny folder i mówimy, że ma status "synchronizing"
+    //  - w tle dociąga on sobie pliki, których nie ma i kasuje te które już są stare
+    //  - kiedy algorytm uzna, że już mu bardzo mało zostało, to zatrzymuje cały system (jak przy operacji na kolejce) i synchronizuje się ostateczne i zmienia status na "active"
+    //  - a ten wątek, co w tle chodzi i sprawdza synchronizacje, to też może folder przestawić w status synchronizing
+    //  - 
 #warning TODO - REST method - Version. Jak się synchronizują, to tylko z taką samą wersją
     public static class Program
     {

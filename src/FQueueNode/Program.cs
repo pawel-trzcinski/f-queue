@@ -15,13 +15,20 @@ using log4net.Repository;
 
 namespace FQueueNode
 {
+#warning TODO - w każdym repozytorium jest plik z wersją (Guid;czas UTC;bieżący plik bazy; bieżący wskaźnik w pliku; ostatni plik bazy; wskaźnik ostatniego elementu) node przy każdej operacji czyta plik z wersją i porównuje pierwszy element; jak różne, to resetuje bufor w pamięci
+#warning TODO - FE tylko i wyłącznie robią proste operacje na kolejkach - peek, enqueue i dequeue
+#warning TODO - BE służą do synchronizacji dostępu do kolejek
+
+#warning TODO - leader election - ETCD.  HealthCheck (liveness - działa; readiness - jest liderem i wsio zainicjalizowane)
+#warning TODO - cała konfiguracja (łącznie z konfiguracją logowania) siedziw etcd w JSON pod jednym kluczem
+#warning TODO - tylko BE czyta ETCD 
+#warning TODO - konfiguracja jest serwowana do FE przez BE
+#warning TODO - dockerfiles - self contained
 #warning TODO - nie operujemy wyjątkami
 #warning TODO - nazwa kolejki: duże i małe litery, cyfry, minus, podkreślenie
 #warning TODO - generator xlsx, który pokazuje czasy każdej operacji - do porównywania czy zmiany, które zrobiliśmy poprawiają wydajność czy nie
 #warning TODO - ograniczenie ilości elementów trzymanych w pamięci
 #warning TODO - ograniczenie pamięci zużywanej przez proces
-#warning TODO - w każdym repozytorium jest plik z wersją (Guid;czas UTC;bieżący plik bazy; bieżący wskaźnik w pliku; ostatni plik bazy; wskaźnik ostatniego elementu) node przy każdej operacji czyta plik z wersją i porównuje pierwszy element; jak różne, to resetuje bufor w pamięci
-#warning TODO - jak ktoś zepsuje plik wersji, to trzeba zsynchronizować; jak wszystkie node'y nie mają pliku, to zakładamy nowe i jedziemy od początku kolejki
 #warning TODO - enqueue i dequeue zmienia wersję
 #warning TODO - bufor w pamięci dopełnia się w tle po każdym dequeue
 #warning TODO - zrobić jakoś, żeby to wszystko działo się strumieniami, żeby nie było za dużo przepisywania pamięci (może dane odzielnie trzymać w RAM a dane operacyjne, wskaźniki itp. oddizelnie? )
@@ -34,14 +41,10 @@ namespace FQueueNode
 #warning TODO - file handler odpowiada za synchroniczny update plików danych i pliku wersji - jakiś command pattern z możliwością rollbacku
 #warning TODO - cykliczne, niezależne porównywanie (jakaś synchronizacja z FileHandler - a może to kolejna operacja FileHandler?) spójności danych we repo (klika harmonogramów: {kiedy + moc sprawdzania})
 #warning TODO - każde wykrycie braku synchronizacji - przestawienie starszego repozytorium w tryb "synchronizing" (albo wywalamy w pierwotnej wersji) - jak możliwe; (jak ta sama wersja ale nie sync, to wywalamy serwis)
-#warning TODO - przykładowy dockerfile
-#warning TODO - przykładowy compose z definiowalną ilością Node'ów - czy da się?
+
 #warning TODO - sprawdzanie bazy danych, też sprawdza wsie CRC32
 
-    //BONUS:
-#warning TODO - wspólnie działających wiele instancji - każda ma te same foldery danych przypisane (jakieś sprawdzanie i sync po net) - jakieś sync po sieci na temat tego kto wykonuje operację w danej chwili
-    // - można by zrobić dwa albo trzy oddzielne node'y (albo te same instancje), które by robiły leader election i mówiły czy możesz robić operację
-#warning TODO - oddzielny kontroler dla synchronizacji zapytań
+#warning TODO - oddzielny kontroler dla synchronizacji danych
     // albo raczej synchronizacja to by była taka, że:
     //  - dodajemy na gorąco kolejny folder i mówimy, że ma status "synchronizing"
     //  - w tle dociąga on sobie pliki, których nie ma i kasuje te które już są stare

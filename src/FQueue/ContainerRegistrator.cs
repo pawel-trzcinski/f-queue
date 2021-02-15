@@ -4,7 +4,10 @@ using FQueue.Data.V01BasicProtocol;
 using log4net;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using FQueue.DateTime;
+using FQueue.FileSystem;
+using FQueue.FileSystem.VersionFile;
 using FQueue.Health;
+using FQueue.QueueLockContext;
 using FQueue.Rest;
 using FQueue.Settings;
 using SimpleInjector;
@@ -23,12 +26,17 @@ namespace FQueue
 
             container.Options.DefaultScopedLifestyle = ScopedLifestyle.Flowing;
 
-            container.RegisterSingleton<IDateTimeService, DateTimeService>();
+            container.RegisterSingleton<IDateTimeAbstraction, DateTimeAbstraction>();
+            container.Register<IFileAbstraction, FileAbstraction>();
 
             container.RegisterSingleton<IConfigurationReader>(() => new ConfigurationReader(configurationFilename));
 
+            container.Register<IWriteVersionFileCommand, WriteVersionFileCommand>();
+            container.RegisterSingleton<ICommandChain, CommandChain>();
+
             container.RegisterSingleton<IQueueContextFactory, QueueContextFactory>();
-            
+            container.RegisterSingleton<ILockContextFactory, LockContextFactory>();
+
             container.RegisterSingleton<IDataProtocolFactory, DataProtocolFactory>();
             container.Register
             (

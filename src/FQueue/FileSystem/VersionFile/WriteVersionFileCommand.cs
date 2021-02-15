@@ -1,15 +1,51 @@
-﻿namespace FQueue.FileSystem.VersionFile
+﻿using System;
+using Newtonsoft.Json;
+
+namespace FQueue.FileSystem.VersionFile
 {
-    public class WriteVersionFileCommand : IFileCommand
+    public class WriteVersionFileCommand : Command, IWriteVersionFileCommand
     {
-        public void Execute()
+#warning TODO - unit tests
+        private readonly IFileAbstraction _fileAbstraction;
+
+        private string _filename;
+        private VersionData _versionData;
+
+        private string _previousState;
+
+        public WriteVersionFileCommand(IFileAbstraction fileAbstraction)
         {
-            throw new System.NotImplementedException();
+            _fileAbstraction = fileAbstraction;
         }
 
-        public void Rollback()
+        public void SetInputData(string filename, VersionData versionData)
         {
-            throw new System.NotImplementedException();
+            if (String.IsNullOrWhiteSpace(filename))
+            {
+                throw new ArgumentNullException(nameof(filename));
+            }
+
+            if (versionData == null)
+            {
+                throw new ArgumentNullException(nameof(versionData));
+            }
+
+            _filename = filename;
+            _versionData = versionData;
+
+            InputDataSet = true;
+        }
+
+        protected override bool ExecuteWithNoGuard()
+        {
+            _previousState = _fileAbstraction.ReadAllText(_filename);
+            _fileAbstraction.WriteAllText(_filename, JsonConvert.SerializeObject(_versionData));
+            return true;
+        }
+
+        protected override void RollbackWithNoGuard()
+        {
+            _fileAbstraction.WriteAllText(_filename, _previousState);
         }
     }
 }

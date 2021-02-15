@@ -1,6 +1,6 @@
 ﻿namespace FQueue.DateTime
 {
-    public interface IDateTimeService
+    public interface IDateTimeAbstraction
     {
         System.DateTime UtcNow { get; }
     }

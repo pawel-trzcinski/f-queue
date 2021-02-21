@@ -16,11 +16,15 @@ using log4net.Repository;
 namespace FQueueNode
 {
 #warning TODO - w każdym repozytorium jest plik z wersją (Guid;czas UTC;bieżący plik bazy; bieżący wskaźnik w pliku; ostatni plik bazy; wskaźnik ostatniego elementu) node przy każdej operacji czyta plik z wersją i porównuje pierwszy element; jak różne, to resetuje bufor w pamięci
+#warning TODO - w każdej kolejce jest plik, który mówi jaka jest struktura katalogów (ile cyfr w plikach, w wew. katalogach i zew. katalogach); mówi też o nazie choć nie musi; są to wartości niezmienne tworzone w czasie tworzenia kolejki;
+#warning TODO - FE ma w pamięci info o wszystkich kolejkach
+#warning TODO - BE ma file watchera na każdym pliku info o kolejce. Jak się cokolwiek zmieni w nim w czasie działąnia BE, to znaczy, że ktoś źle zrobił ręcznie i jest FATA error i wsio zatrzymujemy
 #warning TODO - FE tylko i wyłącznie robią proste operacje na kolejkach - peek, enqueue i dequeue
 #warning TODO - BE służą do synchronizacji dostępu do kolejek
 
 #warning TODO - leader election - ETCD.  HealthCheck (liveness - działa; readiness - jest liderem i wsio zainicjalizowane)
 #warning TODO - cała konfiguracja (łącznie z konfiguracją logowania) siedziw etcd w JSON pod jednym kluczem
+#warning TODO - BE nasłuchuje zmian konfiguracji i je wdraża na żywo - i powiadamia FE, który też je wdraża
 #warning TODO - tylko BE czyta ETCD 
 #warning TODO - konfiguracja jest serwowana do FE przez BE
 #warning TODO - dockerfiles - self contained
@@ -36,6 +40,7 @@ namespace FQueueNode
 #warning TODO - struktura plików (100 plików w folderze nazwanych 00-99; foldery wewnętrzne o nazwach 00-99; foldery zewnętrzne o nazwach 00000000-99999999 - 8 cyfr; nazwa kolejki )
 #warning TODO - ustawiamy początkowe capacity na 1mln. Jak kolejka osiągnie połowę capacity, to w tle zwiększamy capacity razy 2 - czyli dodajemy wsie foldery
 #warning TODO - jak kolejka jest pusta, to wymuszamy czyszczenie starych plików i zaczynamy od zera
+#warning TODO - niech kolejka się zawija, da się ogarnać ring index
 #warning TODO - backup wszystkiego
 #warning TODO - file handler ma odpalonych na stałe tyle workerów ile jest repozytoriów (żeby nie tworzyć wielu wątków za każdym razem)
 #warning TODO - file handler odpowiada za synchroniczny update plików danych i pliku wersji - jakiś command pattern z możliwością rollbacku
@@ -52,6 +57,7 @@ namespace FQueueNode
     //  - a ten wątek, co w tle chodzi i sprawdza synchronizacje, to też może folder przestawić w status synchronizing
     //  - 
 #warning TODO - REST method - Version. Jak się synchronizują, to tylko z taką samą wersją
+#warning TODO - REST method - stan repozytoriów - lista i czy są aktywne czy się synchronizują czy może są kaput
     public static class Program
     {
         private static ILog _log = LogManager.GetLogger(typeof(Program));
@@ -65,6 +71,8 @@ namespace FQueueNode
 
         public static int Main(string[] args)
         {
+#warning TODO - only and always one argument - BE address
+
             ConfigureLog4Net();
 
             _log.Info("Starting FQueueNode");

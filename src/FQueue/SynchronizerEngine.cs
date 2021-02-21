@@ -18,9 +18,9 @@ namespace FQueue
     /// <summary>
     /// Main engine of the app. It contains all the bad, non-injectable stuff.
     /// </summary>
-    public class Engine : IEngine
+    public class SynchronizerEngine : IEngine
     {
-        private static readonly ILog _log = LogManager.GetLogger(typeof(Engine));
+        private static readonly ILog _log = LogManager.GetLogger(typeof(SynchronizerEngine));
 
         private IWebHost _webHost;
 
@@ -33,7 +33,7 @@ namespace FQueue
 
         private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
-        public Engine
+        public SynchronizerEngine
         (
             IConfigurationReader configurationReader,
             IControllerFactory controllerFactory,

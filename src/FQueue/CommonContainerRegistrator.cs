@@ -9,27 +9,22 @@ using FQueue.FileSystem.VersionFile;
 using FQueue.Health;
 using FQueue.QueueLockContext;
 using FQueue.Rest;
-using FQueue.Settings;
 using SimpleInjector;
 
 namespace FQueue
 {
-    public static class ContainerRegistrator
+    public static class CommonContainerRegistrator
     {
-        private static readonly ILog _log = LogManager.GetLogger(typeof(ContainerRegistrator));
+        private static readonly ILog _log = LogManager.GetLogger(typeof(CommonContainerRegistrator));
 
-        public static Container Register(string configurationFilename)
+        public static void Register(Container container)
         {
-            _log.Info("Registering container");
-
-            Container container = new Container();
+            _log.Info("Registering common");
 
             container.Options.DefaultScopedLifestyle = ScopedLifestyle.Flowing;
 
             container.RegisterSingleton<IDateTimeAbstraction, DateTimeAbstraction>();
             container.Register<IFileAbstraction, FileAbstraction>();
-
-            container.RegisterSingleton<IConfigurationReader>(() => new ConfigurationReader(configurationFilename));
 
             container.Register<IWriteVersionFileCommand, WriteVersionFileCommand>();
             container.RegisterSingleton<ICommandChain, CommandChain>();
@@ -53,12 +48,7 @@ namespace FQueue
             container.Register<IFQueueController, FQueueController>(Lifestyle.Scoped);
             container.RegisterSingleton<IControllerFactory, ControllerFactory>();
 
-            container.RegisterSingleton<IEngine, Engine>();
-
-            _log.Debug("Container verification attempt");
-            container.Verify();
-
-            return container;
+            container.RegisterSingleton<IEngine, SynchronizerEngine>();
         }
     }
 }

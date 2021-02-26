@@ -1,4 +1,5 @@
-﻿using FQueue.Context;
+﻿using FQueue.Configuration.Validation;
+using FQueue.Context;
 using FQueue.Data;
 using FQueue.Data.V01BasicProtocol;
 using log4net;
@@ -25,6 +26,14 @@ namespace FQueue
 
             container.RegisterSingleton<IDateTimeAbstraction, DateTimeAbstraction>();
             container.Register<IFileAbstraction, FileAbstraction>();
+            container.Register<IDirectoryAbstraction, DirectoryAbstraction>();
+
+            container.Register<ILeaderElectionConfigurationValidator, LeaderElectionConfigurationValidator>();
+            container.Register<IFilesConfigurationValidator, FilesConfigurationValidator>();
+            container.Register<IPerformanceConfigurationValidator, PerformanceConfigurationValidator>();
+            container.Register<IThrottlingConfigurationValidator, ThrottlingConfigurationValidator>();
+            container.Register<IRestConfigurationValidator, RestConfigurationValidator>();
+            container.Register<IFQueueConfigurationValidator, FQueueConfigurationValidator>();
 
             container.Register<IWriteVersionFileCommand, WriteVersionFileCommand>();
             container.RegisterSingleton<ICommandChain, CommandChain>();
@@ -33,7 +42,7 @@ namespace FQueue
             container.RegisterSingleton<ILockContextFactory, LockContextFactory>();
 
             container.RegisterSingleton<IDataProtocolFactory, DataProtocolFactory>();
-            container.Register
+            container.Collection.Register
             (
                 typeof(IDataProtocol),
                 new[]
@@ -47,8 +56,6 @@ namespace FQueue
 
             container.Register<IFQueueController, FQueueController>(Lifestyle.Scoped);
             container.RegisterSingleton<IControllerFactory, ControllerFactory>();
-
-            container.RegisterSingleton<IEngine, SynchronizerEngine>();
         }
     }
 }

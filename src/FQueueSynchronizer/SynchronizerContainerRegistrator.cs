@@ -1,15 +1,14 @@
 ﻿using FQueue;
 using log4net;
-using FQueue.Settings;
 using SimpleInjector;
 
 namespace FQueueSynchronizer
 {
-    public static class ContainerRegistrator
+    public static class SynchronizerContainerRegistrator
     {
-        private static readonly ILog _log = LogManager.GetLogger(typeof(ContainerRegistrator));
+        private static readonly ILog _log = LogManager.GetLogger(typeof(SynchronizerContainerRegistrator));
 
-        public static Container Register(string configurationFilename)
+        public static Container Register()
         {
             _log.Info("Registering BE container");
 
@@ -17,9 +16,11 @@ namespace FQueueSynchronizer
             container.Options.DefaultScopedLifestyle = ScopedLifestyle.Flowing;
 
             CommonContainerRegistrator.Register(container);
-            
-            container.RegisterSingleton<IConfigurationReader>(() => new ConfigurationReader(configurationFilename));
-            
+
+            //container.RegisterSingleton<IConfigurationReader>(() => new ConfigurationReader(configurationFilename));
+
+            container.RegisterSingleton<IEngine, SynchronizerEngine>();
+
             _log.Debug("Container verification attempt");
             container.Verify();
 

@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
 using FQueue;
-using FQueue.Settings;
 using log4net;
 using log4net.Config;
 using log4net.Repository;
@@ -62,8 +61,6 @@ namespace FQueueNode
     {
         private static ILog _log = LogManager.GetLogger(typeof(Program));
 
-        public const string DEFAULT_CONFIGURATION_FILENAME = "./appsettings.json";
-
         private static readonly AutoResetEvent _closing = new AutoResetEvent(false);
         private static readonly TimeSpan _closingTimeout = TimeSpan.FromSeconds(10);
         private static Task<int> _mainTask;
@@ -114,16 +111,18 @@ namespace FQueueNode
 
         private static int ParseArgumentsAndExecute(string[] args)
         {
-            ParserResult<CommandLineArguments> parseResult = Parser.Default.ParseArguments<CommandLineArguments>(args);
+            ParserResult<NodeArguments> parseResult = Parser.Default.ParseArguments<NodeArguments>(args);
 
             _log.Info($"Parsing program arguments: {String.Join(" ", args)}");
             return parseResult.MapResult
             (
-                commandLineArguments =>
+                nodeContainerRegistrator =>
                 {
+                    nodeContainerRegistrator.Validate();
+
                     _log.Info("Initializing injection container");
-                    _engine = ContainerRegistrator
-                        .Register(String.IsNullOrWhiteSpace(commandLineArguments.ConfigurationFilePath) ? DEFAULT_CONFIGURATION_FILENAME : commandLineArguments.ConfigurationFilePath)
+                    _engine = NodeContainerRegistrator
+                        .Register()
                         .GetInstance<IEngine>();
 
                     _mainTask = Task.Run(() =>
@@ -200,6 +199,5 @@ namespace FQueueNode
             _log.Info("Exit invoked");
             _closing.Set();
         }
-
     }
 }

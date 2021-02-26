@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using FQueueNode;
+using FQueueSynchronizer;
+using NUnit.Framework;
 
 namespace FQueue.Tests
 {
@@ -8,10 +10,15 @@ namespace FQueue.Tests
 #warning TODO - check if all DataProtocols are registered correctly
 
         [Test]
-        public void ContainerRegistersCorrectly()
+        public void NodeContainerRegistersCorrectly()
         {
-#warning TODO
-            //Assert.DoesNotThrow(() => { Assert.IsNotNull(CommonContainerRegistrator.Register(Program.DEFAULT_CONFIGURATION_FILENAME)); });
+            Assert.DoesNotThrow(() => { Assert.IsNotNull(NodeContainerRegistrator.Register()); });
+        }
+
+        [Test]
+        public void SynchronizerContainerRegistersCorrectly()
+        {
+            Assert.DoesNotThrow(() => { Assert.IsNotNull(SynchronizerContainerRegistrator.Register()); });
         }
     }
 }

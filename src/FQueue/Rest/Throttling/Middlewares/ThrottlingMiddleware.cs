@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using FQueue.Settings;
+using FQueue.Configuration;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;

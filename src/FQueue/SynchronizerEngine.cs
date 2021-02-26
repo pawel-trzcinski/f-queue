@@ -1,9 +1,8 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
+using FQueue.Configuration;
 using FQueue.Health;
 using FQueue.Rest.Throttling.Middlewares;
-using FQueue.Settings;
 using log4net;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -53,7 +52,7 @@ namespace FQueue
 
         public void Start()
         {
-            _log.Info($"Reporting configuration:{Environment.NewLine}{ _configurationReader.Configuration.ReportConfiguration()}");
+            //_log.Info($"Reporting configuration:{Environment.NewLine}{ _configurationReader.Configuration.ReportConfiguration()}");
 
 #warning TODO - zbadaj spójność danych i czy we wszystkich repozytoriach jest to samo (np to co w pliku wersji musi się odnosić do realnej sytuacji na dysku)
 #warning TODO - konfigurowalna moc sprawdzania spójności przy starcie (same pliki wersji, struktura katalogów i plików, wsie dane - w kilku wątkach porównujemy pliki)
@@ -98,7 +97,7 @@ namespace FQueue
         /// </summary>
         protected virtual void StartHosting()
         {
-            ThrottlingConfiguration throttlingConfiguration = _configurationReader.Configuration.Rest.Throttling;
+            ThrottlingConfiguration throttlingConfiguration = _configurationReader.Configuration.Rest.SynchronizerThrottling;
 
             _webHost = WebHost.CreateDefaultBuilder(null)
                 .UseKestrel(options =>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using FQueue.Settings;
+using FQueue.Configuration;
 
 namespace FQueue.Rest.Throttling.Middlewares
 {

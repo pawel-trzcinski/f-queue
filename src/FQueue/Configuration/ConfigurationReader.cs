@@ -1,8 +1,9 @@
 ﻿using System.IO;
+using FQueue.Configuration.Validation;
 using log4net;
 using Newtonsoft.Json;
 
-namespace FQueue.Settings
+namespace FQueue.Configuration
 {
     /// <summary>
     /// Default implementation of <see cref="IConfigurationReader"/>.
@@ -15,6 +16,8 @@ namespace FQueue.Settings
 
         private static readonly object _lockObject = new object();
         private volatile FQueueConfiguration _fQueueConfiguration;
+
+        private readonly IFQueueConfigurationValidator _fQueueConfigurationValidator;
 
         private readonly string _configurationFilename;
 

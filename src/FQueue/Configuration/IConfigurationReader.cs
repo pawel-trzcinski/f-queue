@@ -1,4 +1,4 @@
-﻿namespace FQueue.Settings
+﻿namespace FQueue.Configuration
 {
     /// <summary>
     /// Interface for custom reading appsettings.josn configuration.

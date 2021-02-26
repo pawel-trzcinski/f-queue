@@ -1,7 +1,7 @@
 ﻿Plan działania:
-- klasy konfiguracji
 - etcd wrapper
 - watchdog with leader election w BE
+- czytanie konfiguracji z Etcd i z BE - wyświetlanie - override defaultowym plikiem z dysku
 - Node Controller methods
 - BE Controller methods
 - liveness, readiness na BE - uwzględnić życie repozytoriów

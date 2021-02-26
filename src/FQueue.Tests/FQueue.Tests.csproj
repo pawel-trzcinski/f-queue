@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FQueueNode\FQueueNode.csproj" />
+    <ProjectReference Include="..\FQueueSynchronizer\FQueueSynchronizer.csproj" />
     <ProjectReference Include="..\FQueue\FQueue.csproj" />
   </ItemGroup>
 

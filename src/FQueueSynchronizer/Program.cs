@@ -35,6 +35,7 @@ namespace FQueueSynchronizer
 
         public static int Main(string[] args)
         {
+            Main123();
 #if(DEBUG)
             args = new[] {"-u", "http://127.0.0.1/"};
 #endif
@@ -104,6 +105,7 @@ namespace FQueueSynchronizer
                     (
                         new Compare
                         {
+                            
                             Key = ByteString.CopyFromUtf8("leader-election"),
                             Target = Compare.Types.CompareTarget.Create,
                             Result = Compare.Types.CompareResult.Greater,

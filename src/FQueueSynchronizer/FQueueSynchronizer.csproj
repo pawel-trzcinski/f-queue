@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="dotnet-etcd" Version="4.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\FQueue\FQueue.csproj" />
   </ItemGroup>
 

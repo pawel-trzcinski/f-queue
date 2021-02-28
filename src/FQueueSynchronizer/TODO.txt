@@ -1,9 +1,10 @@
 ﻿Plan działania:
 - etcd wrapper
 - watchdog with leader election w BE
-- czytanie konfiguracji z Etcd i z BE - wyświetlanie - override defaultowym plikiem z dysku
+- mechanizm engines
 - Node Controller methods
 - BE Controller methods
+- czytanie konfiguracji z Etcd i z BE - wyświetlanie - override defaultowym plikiem z dysku
 - liveness, readiness na BE - uwzględnić życie repozytoriów
 - liveness, readiness na FE
 - FE RestHost

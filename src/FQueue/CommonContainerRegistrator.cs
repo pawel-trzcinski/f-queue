@@ -5,6 +5,7 @@ using FQueue.Data.V01BasicProtocol;
 using log4net;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using FQueue.DateTime;
+using FQueue.Etcd;
 using FQueue.FileSystem;
 using FQueue.FileSystem.VersionFile;
 using FQueue.Health;
@@ -27,6 +28,8 @@ namespace FQueue
             container.RegisterSingleton<IDateTimeAbstraction, DateTimeAbstraction>();
             container.Register<IFileAbstraction, FileAbstraction>();
             container.Register<IDirectoryAbstraction, DirectoryAbstraction>();
+
+            container.Register<IEtcdWrapper, EtcdWrapper>();
 
             container.Register<ILeaderElectionConfigurationValidator, LeaderElectionConfigurationValidator>();
             container.Register<IFilesConfigurationValidator, FilesConfigurationValidator>();

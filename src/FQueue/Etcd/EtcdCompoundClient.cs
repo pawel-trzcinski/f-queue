@@ -9,7 +9,6 @@ namespace FQueue.Etcd
 {
     public class EtcdCompoundClient : IEtcdCompoundClient
     {
-#warning TODO - unit tests
         private readonly IEtcdClient _etcdClient;
         private readonly IDisposable _disposable;
 

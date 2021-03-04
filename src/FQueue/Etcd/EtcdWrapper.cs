@@ -10,7 +10,7 @@ namespace FQueue.Etcd
     public class EtcdWrapper : IEtcdWrapper
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(EtcdWrapper));
-#warning TODO - unit tests
+        
         public const string KEY_LEADER_ELECTION = "leader-election";
 
         private readonly IEtcdCompoundClientFactory _etcdCompoundClientFactory;
@@ -95,7 +95,6 @@ namespace FQueue.Etcd
 
         public Task StartKeepAlive(string serverUri, long leaseId, CancellationToken token)
         {
-
             try
             {
                 using (IEtcdCompoundClient client = _etcdCompoundClientFactory.CreateClient(serverUri))

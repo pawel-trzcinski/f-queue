@@ -29,6 +29,7 @@ namespace FQueue
             container.Register<IFileAbstraction, FileAbstraction>();
             container.Register<IDirectoryAbstraction, DirectoryAbstraction>();
 
+            container.Register<IEtcdCompoundClientFactory, EtcdCompoundClientFactory>();
             container.Register<IEtcdWrapper, EtcdWrapper>();
 
             container.Register<ILeaderElectionConfigurationValidator, LeaderElectionConfigurationValidator>();

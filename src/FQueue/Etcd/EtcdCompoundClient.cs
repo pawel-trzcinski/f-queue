@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using dotnet_etcd.interfaces;
 using Etcdserverpb;
-using Grpc.Core;
 
 namespace FQueue.Etcd
 {
@@ -23,14 +22,14 @@ namespace FQueue.Etcd
             _disposable.Dispose();
         }
 
-        public TxnResponse Transaction(TxnRequest request, Metadata headers = null, System.DateTime? deadline = null, CancellationToken cancellationToken = default)
+        public TxnResponse Transaction(TxnRequest request)
         {
-            return _etcdClient.Transaction(request, headers, deadline, cancellationToken);
+            return _etcdClient.Transaction(request);
         }
 
-        public LeaseGrantResponse LeaseGrant(LeaseGrantRequest request, Metadata headers = null, System.DateTime? deadline = null, CancellationToken cancellationToken = default)
+        public LeaseGrantResponse LeaseGrant(LeaseGrantRequest request)
         {
-            return _etcdClient.LeaseGrant(request, headers, deadline, cancellationToken);
+            return _etcdClient.LeaseGrant(request);
         }
 
         public Task LeaseKeepAlive(long leaseId, CancellationToken cancellationToken)
@@ -38,9 +37,9 @@ namespace FQueue.Etcd
             return _etcdClient.LeaseKeepAlive(leaseId, cancellationToken);
         }
 
-        public RangeResponse Get(string key, Metadata headers = null, System.DateTime? deadline = null, CancellationToken cancellationToken = default)
+        public RangeResponse Get(string key)
         {
-            return _etcdClient.Get(key, headers, deadline, cancellationToken);
+            return _etcdClient.Get(key);
         }
     }
 }

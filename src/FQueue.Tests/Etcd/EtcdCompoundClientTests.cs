@@ -5,7 +5,6 @@ using AutoFixture;
 using dotnet_etcd.interfaces;
 using Etcdserverpb;
 using FQueue.Etcd;
-using Grpc.Core;
 using Moq;
 using NUnit.Framework;
 
@@ -39,15 +38,12 @@ namespace FQueue.Tests.Etcd
             Fixture fixture = new Fixture();
 
             TxnRequest txnRequest = fixture.Create<TxnRequest>();
-            Metadata headers = fixture.Create<Metadata>();
-            System.DateTime? deadline = fixture.Create<System.DateTime?>();
-            CancellationToken cancellationToken = fixture.Create<CancellationToken>();
             TxnResponse response = fixture.Create<TxnResponse>();
 
-            etcdClientMock.Setup(p => p.Transaction(txnRequest, headers, deadline, cancellationToken)).Returns(response);
+            etcdClientMock.Setup(p => p.Transaction(txnRequest, null, null, CancellationToken.None)).Returns(response);
 
-            TxnResponse actualResponse = client.Transaction(txnRequest, headers, deadline, cancellationToken);
-            etcdClientMock.Verify(p => p.Transaction(txnRequest, headers, deadline, cancellationToken), Times.Once);
+            TxnResponse actualResponse = client.Transaction(txnRequest);
+            etcdClientMock.Verify(p => p.Transaction(txnRequest, null, null, CancellationToken.None), Times.Once);
             Assert.AreSame(response, actualResponse);
         }
 
@@ -62,15 +58,12 @@ namespace FQueue.Tests.Etcd
             Fixture fixture = new Fixture();
 
             LeaseGrantRequest request = fixture.Create<LeaseGrantRequest>();
-            Metadata header = fixture.Create<Metadata>();
-            System.DateTime? deadline = fixture.Create<System.DateTime?>();
-            CancellationToken cancellationToken = fixture.Create<CancellationToken>();
             LeaseGrantResponse response = fixture.Create<LeaseGrantResponse>();
 
-            etcdClientMock.Setup(p => p.LeaseGrant(request, header, deadline, cancellationToken)).Returns(response);
+            etcdClientMock.Setup(p => p.LeaseGrant(request, null, null, CancellationToken.None)).Returns(response);
 
-            LeaseGrantResponse actualResponse = client.LeaseGrant(request, header, deadline, cancellationToken);
-            etcdClientMock.Verify(p => p.LeaseGrant(request, header, deadline, cancellationToken), Times.Once);
+            LeaseGrantResponse actualResponse = client.LeaseGrant(request);
+            etcdClientMock.Verify(p => p.LeaseGrant(request, null, null, CancellationToken.None), Times.Once);
             Assert.AreSame(response, actualResponse);
         }
 
@@ -106,15 +99,12 @@ namespace FQueue.Tests.Etcd
             Fixture fixture = new Fixture();
 
             string key = fixture.Create<string>();
-            Metadata headers = fixture.Create<Metadata>();
-            System.DateTime? deadline = fixture.Create<System.DateTime?>();
-            CancellationToken cancellationToken = fixture.Create<CancellationToken>();
             RangeResponse response = fixture.Create<RangeResponse>();
 
-            etcdClientMock.Setup(p => p.Get(key, headers, deadline, cancellationToken)).Returns(response);
+            etcdClientMock.Setup(p => p.Get(key, null, null, CancellationToken.None)).Returns(response);
 
-            RangeResponse actualResponse = client.Get(key, headers, deadline, cancellationToken);
-            etcdClientMock.Verify(p => p.Get(key, headers, deadline, cancellationToken), Times.Once);
+            RangeResponse actualResponse = client.Get(key);
+            etcdClientMock.Verify(p => p.Get(key, null, null, CancellationToken.None), Times.Once);
             Assert.AreSame(response, actualResponse);
         }
     }

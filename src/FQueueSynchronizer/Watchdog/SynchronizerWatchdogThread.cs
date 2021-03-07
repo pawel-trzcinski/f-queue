@@ -7,14 +7,24 @@ namespace FQueueSynchronizer.Watchdog
 {
     public class SynchronizerWatchdogThread : WatchdogThread
     {
-#warning TODO
+#warning TODO - unit tests
 
         private readonly IEtcdLeaseChecker _etcdLeaseChecker;
 
-        public SynchronizerWatchdogThread(ILeaderElectionWatcher leaderElectionWatcher, IDiskSpaceWatcher diskSpaceWatcher, IEtcdLeaseChecker etcdLeaseChecker) 
-            : base(new IWatcher[]{ leaderElectionWatcher, diskSpaceWatcher })
+        public SynchronizerWatchdogThread(ILeaderElectionWatcher leaderElectionWatcher, IDiskSpaceWatcher diskSpaceWatcher, IEtcdLeaseChecker etcdLeaseChecker)
+            : base(new IWatcher[] {leaderElectionWatcher, diskSpaceWatcher})
         {
             _etcdLeaseChecker = etcdLeaseChecker;
+        }
+
+        protected override void StartSpecificCheckers()
+        {
+            _etcdLeaseChecker.StartChecking();
+        }
+
+        protected override void StopSpecificCheckers()
+        {
+            _etcdLeaseChecker.StopChecking();
         }
     }
 }

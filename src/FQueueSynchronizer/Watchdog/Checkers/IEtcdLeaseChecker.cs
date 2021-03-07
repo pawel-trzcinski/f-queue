@@ -4,5 +4,6 @@ namespace FQueueSynchronizer.Watchdog.Checkers
 {
     public interface IEtcdLeaseChecker : IChecker
     {
+        long LeaseId { get; }
     }
 }

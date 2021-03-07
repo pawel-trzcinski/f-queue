@@ -3,7 +3,7 @@
     public class DiskSpaceWatcher : IDiskSpaceWatcher
     {
 #warning TODO
-        public string Name { get; }
+        public string Name => nameof(DiskSpaceWatcher);
 
         public bool Check()
         {

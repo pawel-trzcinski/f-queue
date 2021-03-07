@@ -1,4 +1,5 @@
-﻿using FQueue.Configuration.Validation;
+﻿using FQueue.Configuration;
+using FQueue.Configuration.Validation;
 using FQueue.Context;
 using FQueue.Data;
 using FQueue.Data.V01BasicProtocol;
@@ -24,6 +25,8 @@ namespace FQueue
             _log.Info("Registering common");
 
             container.Options.DefaultScopedLifestyle = ScopedLifestyle.Flowing;
+
+            container.RegisterSingleton<IServerUri, ServerUri>();
 
             container.RegisterSingleton<IDateTimeAbstraction, DateTimeAbstraction>();
             container.Register<IFileAbstraction, FileAbstraction>();

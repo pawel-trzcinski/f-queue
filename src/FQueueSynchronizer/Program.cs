@@ -8,9 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
 using FQueue;
+using FQueue.Configuration;
 using log4net;
 using log4net.Config;
 using log4net.Repository;
+using SimpleInjector;
 
 namespace FQueueSynchronizer
 {
@@ -61,9 +63,9 @@ namespace FQueueSynchronizer
                     synchronizerArguments.Validate();
 
                     _log.Info("Initializing injection container");
-                    _engine = SynchronizerContainerRegistrator
-                        .Register()
-                        .GetInstance<IEngine>();
+                    Container container = SynchronizerContainerRegistrator.Register();
+                    container.GetInstance<IServerUri>().Uri = synchronizerArguments.EtcdEndpoint;
+                    _engine = container.GetInstance<IEngine>();
 
                     _mainTask = Task.Run(() =>
                     {

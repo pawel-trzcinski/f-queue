@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using dotnet_etcd.interfaces;
 using Etcdserverpb;
 
-namespace FQueue.Etcd
+namespace FQueueSynchronizer.Etcd
 {
     public class EtcdCompoundClient : IEtcdCompoundClient
     {

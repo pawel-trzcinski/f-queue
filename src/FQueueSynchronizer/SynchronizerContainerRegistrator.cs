@@ -1,4 +1,9 @@
 ﻿using FQueue;
+using FQueue.Watchdog;
+using FQueueSynchronizer.Etcd;
+using FQueueSynchronizer.Watchdog;
+using FQueueSynchronizer.Watchdog.Checkers;
+using FQueueSynchronizer.Watchdog.Watchers;
 using log4net;
 using SimpleInjector;
 
@@ -17,9 +22,12 @@ namespace FQueueSynchronizer
 
             CommonContainerRegistrator.Register(container);
 
-            //container.RegisterSingleton<IConfigurationReader>(() => new ConfigurationReader(configurationFilename));
+            container.Register<IEtcdCompoundClientFactory, EtcdCompoundClientFactory>();
+            container.Register<IEtcdWrapper, EtcdWrapper>();
 
-            container.RegisterSingleton<IEngine, SynchronizerEngine>();
+            container.Register<ILeaderElectionWatcher, LeaderElectionWatcher>();
+            container.RegisterSingleton<EtcdLeaseChecker, EtcdLeaseChecker>();
+            container.RegisterSingleton<IWatchdogThread, SynchronizerWatchdogThread>();
 
             _log.Debug("Container verification attempt");
             container.Verify();

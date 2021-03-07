@@ -5,12 +5,12 @@ using FQueue.Data.V01BasicProtocol;
 using log4net;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using FQueue.DateTime;
-using FQueue.Etcd;
 using FQueue.FileSystem;
 using FQueue.FileSystem.VersionFile;
 using FQueue.Health;
 using FQueue.QueueLockContext;
 using FQueue.Rest;
+using FQueue.Watchdog.Watchers;
 using SimpleInjector;
 
 namespace FQueue
@@ -29,15 +29,14 @@ namespace FQueue
             container.Register<IFileAbstraction, FileAbstraction>();
             container.Register<IDirectoryAbstraction, DirectoryAbstraction>();
 
-            container.Register<IEtcdCompoundClientFactory, EtcdCompoundClientFactory>();
-            container.Register<IEtcdWrapper, EtcdWrapper>();
-
             container.Register<ILeaderElectionConfigurationValidator, LeaderElectionConfigurationValidator>();
             container.Register<IFilesConfigurationValidator, FilesConfigurationValidator>();
             container.Register<IPerformanceConfigurationValidator, PerformanceConfigurationValidator>();
             container.Register<IThrottlingConfigurationValidator, ThrottlingConfigurationValidator>();
             container.Register<IRestConfigurationValidator, RestConfigurationValidator>();
             container.Register<IFQueueConfigurationValidator, FQueueConfigurationValidator>();
+
+            container.RegisterSingleton<IDiskSpaceWatcher, DiskSpaceWatcher>();
 
             container.Register<IWriteVersionFileCommand, WriteVersionFileCommand>();
             container.RegisterSingleton<ICommandChain, CommandChain>();

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AutoFixture;
 using dotnet_etcd.interfaces;
 using Etcdserverpb;
-using FQueue.Etcd;
+using FQueueSynchronizer.Etcd;
 using Moq;
 using NUnit.Framework;
 

@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using Etcdserverpb;
-using FQueue.Etcd;
+using FQueueSynchronizer.Etcd;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Moq;

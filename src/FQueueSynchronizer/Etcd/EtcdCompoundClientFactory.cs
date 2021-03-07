@@ -1,6 +1,6 @@
 ﻿using dotnet_etcd;
 
-namespace FQueue.Etcd
+namespace FQueueSynchronizer.Etcd
 {
     public class EtcdCompoundClientFactory : IEtcdCompoundClientFactory
     {

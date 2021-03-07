@@ -1,5 +1,5 @@
 ﻿Plan działania:
-- watchdog with leader election w BE
+- watchdog with leader election w BE i diskspace checker w BE i FE
 - mechanizm engines
 - Node Controller methods
 - BE Controller methods

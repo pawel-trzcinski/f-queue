@@ -1,4 +1,4 @@
-﻿namespace FQueue.Etcd
+﻿namespace FQueueSynchronizer.Etcd
 {
     public interface IEtcdCompoundClientFactory
     {

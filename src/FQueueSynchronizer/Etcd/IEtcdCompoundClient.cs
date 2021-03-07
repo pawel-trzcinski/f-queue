@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Etcdserverpb;
 
-namespace FQueue.Etcd
+namespace FQueueSynchronizer.Etcd
 {
     public interface IEtcdCompoundClient : IDisposable
     {

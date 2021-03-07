@@ -1,4 +1,4 @@
-﻿using FQueue.Etcd;
+﻿using FQueueSynchronizer.Etcd;
 using NUnit.Framework;
 
 namespace FQueue.Tests.Etcd

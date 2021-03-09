@@ -1,16 +1,19 @@
 ﻿using System.IO;
 using System.Text;
+using FQueue;
 using Microsoft.AspNetCore.Mvc;
 using FQueue.Health;
 
-namespace FQueueNode.Rest
+namespace FQueueSynchronizer.Rest
 {
     /// <summary>
     /// Default RandomSimulation controller.
     /// </summary>
-    [Route("fqueue")]
-    public class FQueueNodeController : Controller, IFQueueNodeController
+    [Route(Engine.FQUEUE + "/" + SYNC)]
+    public class SynchronizerController : Controller, ISynchronizerController
     {
+        public const string SYNC = "sync";
+
 #warning TODO - przesyłanie strumieniem jest bez sensu, bo base64 string zajmie 2 razy więcej miejsca => posługujemy się tylko xml i json => strumieniowy protokół tylko w plikach
 #warning TODO - operacje czysto tagowe - czyli tak na prawdę zwykły peek i to chyba wsio
         // GET /{queueName}/Dequeue? count = 1
@@ -23,7 +26,7 @@ namespace FQueueNode.Rest
 
         private readonly IHealthChecker _healthChecker;
 
-        public FQueueNodeController(IHealthChecker healthChecker)
+        public SynchronizerController(IHealthChecker healthChecker)
         {
             this._healthChecker = healthChecker;
         }

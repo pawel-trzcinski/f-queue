@@ -16,8 +16,7 @@ namespace FQueue.Configuration.Validation
         public void Validate(RestConfiguration configuration)
         {
             _log.Debug($"Validating {nameof(RestConfiguration)}");
-            _throttlingConfigurationValidator.Validate(configuration.NodeThrottling);
-            _throttlingConfigurationValidator.Validate(configuration.SynchronizerThrottling);
+            _throttlingConfigurationValidator.Validate(configuration.Throttling);
             _log.Info($"{nameof(RestConfiguration)} valid");
         }
     }

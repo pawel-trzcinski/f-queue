@@ -6,7 +6,8 @@ namespace FQueue.Configuration
     [Serializable]
     public class FQueueConfiguration
     {
-        public RestConfiguration Rest { get; }
+        public RestConfiguration RestNode { get; }
+        public RestConfiguration RestSynchronizer { get; }
 
         public FilesConfiguration Files { get; }
 
@@ -15,9 +16,10 @@ namespace FQueue.Configuration
         public LeaderElectionConfiguration LeaderElection { get; }
 
         [JsonConstructor]
-        public FQueueConfiguration(RestConfiguration rest, FilesConfiguration files, PerformanceConfiguration performance, LeaderElectionConfiguration leaderElection)
+        public FQueueConfiguration(RestConfiguration restNode, RestConfiguration restSynchronizer, FilesConfiguration files, PerformanceConfiguration performance, LeaderElectionConfiguration leaderElection)
         {
-            Rest = rest;
+            RestNode = restNode;
+            RestSynchronizer = restSynchronizer;
             Files = files;
             Performance = performance;
             LeaderElection = leaderElection;

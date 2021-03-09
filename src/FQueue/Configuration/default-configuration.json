@@ -1,6 +1,15 @@
 ﻿{
-  "Rest": {
+  "RestNode": {
     "HostingPort": "7081",
+    "Throttling": {
+      "ConcurrentRequestsLimit": "5",
+      "QueueLimit": "100",
+      "QueueTimeoutS": "60",
+      "MaximumServerConnections": "105"
+    }
+  },
+  "RestSynchronizer": {
+    "HostingPort": "7080",
     "Throttling": {
       "ConcurrentRequestsLimit": "5",
       "QueueLimit": "100",

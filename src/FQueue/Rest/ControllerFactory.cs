@@ -34,13 +34,13 @@ namespace FQueue.Rest
             {
                 throw new ArgumentNullException(nameof(context));
             }
-            
             Scope scope = ThreadScopedLifestyle.BeginScope(_container);
 
             _log.Debug("Seting Scope feature");
             context.HttpContext.Features.Set(scope);
 
-            _log.Debug("Getting controller from incection container");
+            _log.Debug("Getting controller from injection container");
+#warning TODO - routing to diferent controllers
             return scope.GetInstance<IFQueueController>();
         }
 

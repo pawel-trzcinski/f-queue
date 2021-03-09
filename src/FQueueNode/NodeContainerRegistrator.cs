@@ -1,4 +1,6 @@
 ﻿using FQueue;
+using FQueue.Rest;
+using FQueueNode.Rest;
 using log4net;
 using SimpleInjector;
 
@@ -17,9 +19,9 @@ namespace FQueueNode
 
             CommonContainerRegistrator.Register(container);
 
-            //container.RegisterSingleton<IConfigurationReader>(() => new ConfigurationReader(configurationFilename));
+            container.Register<IFQueueController, NodeController>(Lifestyle.Scoped);
 
-            //container.RegisterSingleton<IEngine, SynchronizerEngine>();
+            container.RegisterSingleton<IEngine, NodeEngine>();
 
             _log.Debug("Container verification attempt");
             container.Verify();

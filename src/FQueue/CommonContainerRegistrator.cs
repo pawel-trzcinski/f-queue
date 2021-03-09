@@ -39,6 +39,8 @@ namespace FQueue
             container.Register<IRestConfigurationValidator, RestConfigurationValidator>();
             container.Register<IFQueueConfigurationValidator, FQueueConfigurationValidator>();
 
+            container.RegisterSingleton<IConfigurationReader, ConfigurationReader>();
+
             container.RegisterSingleton<IDiskSpaceWatcher, DiskSpaceWatcher>();
 
             container.Register<IWriteVersionFileCommand, WriteVersionFileCommand>();
@@ -60,7 +62,6 @@ namespace FQueue
             
             container.RegisterSingleton<IHealthChecker, HealthChecker>();
 
-            container.Register<IFQueueController, FQueueController>(Lifestyle.Scoped);
             container.RegisterSingleton<IControllerFactory, ControllerFactory>();
         }
     }

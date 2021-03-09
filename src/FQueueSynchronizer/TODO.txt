@@ -1,13 +1,12 @@
 ﻿Plan działania:
-- watchdog with leader election w BE i diskspace checker w BE i FE
 - mechanizm engines
 - Node Controller methods
 - BE Controller methods
+- liveness readiness Controllers
+- controllers routing mechanism - z obowizkowym przedrostkiem fqueue
 - czytanie konfiguracji z Etcd i z BE - wyświetlanie - override defaultowym plikiem z dysku
 - liveness, readiness na BE - uwzględnić życie repozytoriów
 - liveness, readiness na FE
-- FE RestHost
-- BE RestHost
 - DESTROY script - kładzenie wszystkiego
 - deploy script += 2 * BE
 - deploy script += HA proxy na BE - po readiness

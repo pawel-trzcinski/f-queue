@@ -13,7 +13,7 @@ namespace FQueue.Tests.Configuration
             ushort hostingPort = 7081
         )
         {
-            return new RestConfiguration(hostingPort, ThrottlingConfigurationTests.CreateConfiguration(), ThrottlingConfigurationTests.CreateConfiguration());
+            return new RestConfiguration(hostingPort, ThrottlingConfigurationTests.CreateConfiguration());
         }
 
         [Test]
@@ -25,8 +25,7 @@ namespace FQueue.Tests.Configuration
 
             Assert.DoesNotThrow(() => new RestConfigurationValidator(throttlingConfigurationValidatorMock.Object).Validate(configuration));
 
-            throttlingConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.NodeThrottling), Times.Once);
-            throttlingConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.SynchronizerThrottling), Times.Once);
+            throttlingConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.Throttling), Times.Once);
         }
     }
 }

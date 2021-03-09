@@ -13,6 +13,7 @@ namespace FQueue.Tests.Configuration
             return new FQueueConfiguration
             (
                 RestConfigurationTests.CreateConfiguration(),
+                RestConfigurationTests.CreateConfiguration(),
                 FilesConfigurationTests.CreateConfiguration(),
                 PerformanceConfigurationTests.CreateConfiguration(),
                 LeaderElectionConfigurationTests.CreateConfiguration()
@@ -37,7 +38,8 @@ namespace FQueue.Tests.Configuration
                 restConfigurationValidatorMock.Object
             ).Validate(configuration));
 
-            restConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.Rest), Times.Once);
+            restConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.RestNode), Times.Once);
+            restConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.RestSynchronizer), Times.Once);
             filesConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.Files), Times.Once);
             performanceConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.Performance), Times.Once);
             leaderElectionConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.LeaderElection), Times.Once);

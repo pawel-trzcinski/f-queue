@@ -1,6 +1,8 @@
 ﻿using FQueue;
+using FQueue.Rest;
 using FQueue.Watchdog;
 using FQueueSynchronizer.Etcd;
+using FQueueSynchronizer.Rest;
 using FQueueSynchronizer.Watchdog;
 using FQueueSynchronizer.Watchdog.Checkers;
 using FQueueSynchronizer.Watchdog.Watchers;
@@ -28,6 +30,10 @@ namespace FQueueSynchronizer
             container.Register<ILeaderElectionWatcher, LeaderElectionWatcher>();
             container.RegisterSingleton<EtcdLeaseChecker, EtcdLeaseChecker>();
             container.RegisterSingleton<IWatchdogThread, SynchronizerWatchdogThread>();
+
+            container.Register<IFQueueController, SynchronizerController>(Lifestyle.Scoped);
+
+            container.RegisterSingleton<IEngine, SynchronizerEngine>();
 
             _log.Debug("Container verification attempt");
             container.Verify();

@@ -31,7 +31,8 @@ namespace FQueue.Configuration.Validation
             _leaderElectionConfigurationValidator.Validate(configuration.LeaderElection);
             _filesConfigurationValidator.Validate(configuration.Files);
             _performanceConfigurationValidator.Validate(configuration.Performance);
-            _restConfigurationValidator.Validate(configuration.Rest);
+            _restConfigurationValidator.Validate(configuration.RestNode);
+            _restConfigurationValidator.Validate(configuration.RestSynchronizer);
             _log.Info($"{nameof(FQueueConfiguration)} valid");
         }
     }

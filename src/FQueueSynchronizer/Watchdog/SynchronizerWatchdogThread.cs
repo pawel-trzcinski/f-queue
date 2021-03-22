@@ -11,8 +11,8 @@ namespace FQueueSynchronizer.Watchdog
 
         private readonly IEtcdLeaseChecker _etcdLeaseChecker;
 
-        public SynchronizerWatchdogThread(ILeaderElectionWatcher leaderElectionWatcher, IDiskSpaceWatcher diskSpaceWatcher, IEtcdLeaseChecker etcdLeaseChecker)
-            : base(new IWatcher[] {leaderElectionWatcher, diskSpaceWatcher})
+        public SynchronizerWatchdogThread(IWatcherFactory watcherFactory, IEtcdLeaseChecker etcdLeaseChecker)
+            : base(() => new IWatcher[] {watcherFactory.CreateWatcher<ILeaderElectionWatcher>(), watcherFactory.CreateWatcher<IDiskSpaceWatcher>()})
         {
             _etcdLeaseChecker = etcdLeaseChecker;
         }

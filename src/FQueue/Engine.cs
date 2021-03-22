@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Reflection;
 using FQueue.Configuration;
 using FQueue.Rest.Throttling.Middlewares;
 using FQueue.Watchdog;
@@ -15,7 +16,6 @@ namespace FQueue
 {
     public abstract class Engine : IEngine
     {
-#warning TODO - unit tests
         private static readonly ILog _log = LogManager.GetLogger(typeof(Engine));
 
         public const string FQUEUE = "fqueue";
@@ -31,6 +31,8 @@ namespace FQueue
             _watchdogThread = watchdogThread;
             _controllerFactory = controllerFactory;
         }
+
+        protected abstract Assembly GetControllerAssembly();
 
         public void Start()
         {
@@ -79,29 +81,37 @@ namespace FQueue
                 })
                 .ConfigureServices(services =>
                 {
-                    services.AddSingleton(s => _controllerFactory);
                     services.AddLogging();
+      
                     services.AddMvc(o =>
                     {
-                        o.EnableEndpointRouting = false;
+                        //o.EnableEndpointRouting = false;
 
                         o.RespectBrowserAcceptHeader = true;
 
                         o.OutputFormatters.Add(new XmlSerializerOutputFormatter());
-                    });
-                    services.AddSwaggerGen(c => { c.SwaggerDoc(FQUEUE, new OpenApiInfo { Title = FQUEUE_CAPITALIZED, Version = "v1" }); });
+                    }).AddApplicationPart(GetControllerAssembly());
+                    
+                    services.AddSingleton(_controllerFactory);
+
+                    services.AddSwaggerGen(c => { c.SwaggerDoc(FQUEUE, new OpenApiInfo {Title = FQUEUE_CAPITALIZED, Version = "v1"}); });
                 })
                 .Configure(app =>
                 {
                     app.UseMiddleware<ThrottlingMiddleware>(restConfiguration.Throttling);
-                    app.UseMvc();
+                    app.UseRouting();
                     app.UseSwagger();
 
                     app.UseSwaggerUI(c => { c.SwaggerEndpoint($"/swagger/{FQUEUE}/swagger.json", FQUEUE_CAPITALIZED); });
+
+                    app.UseEndpoints(endpoints =>
+                    {
+                        endpoints.MapControllers();
+                    });
                 })
                 .Build();
 
-            _webHost.Run();
+            _webHost.RunAsync();
         }
 
         private void StopHosting()

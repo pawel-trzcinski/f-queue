@@ -19,16 +19,13 @@ namespace FQueueSynchronizer
         {
             _log.Info("Registering BE container");
 
-            Container container = new Container();
-            container.Options.DefaultScopedLifestyle = ScopedLifestyle.Flowing;
+            Container container = CommonContainerRegistrator.Register();
 
-            CommonContainerRegistrator.Register(container);
-
-            container.Register<IEtcdCompoundClientFactory, EtcdCompoundClientFactory>();
-            container.Register<IEtcdWrapper, EtcdWrapper>();
+            container.RegisterSingleton<IEtcdCompoundClientFactory, EtcdCompoundClientFactory>();
+            container.RegisterSingleton<IEtcdWrapper, EtcdWrapper>(); // singleton because this wrapper is using IEtcdCompoundClientFactory every time
 
             container.Register<ILeaderElectionWatcher, LeaderElectionWatcher>();
-            container.RegisterSingleton<EtcdLeaseChecker, EtcdLeaseChecker>();
+            container.RegisterSingleton<IEtcdLeaseChecker, EtcdLeaseChecker>();
             container.RegisterSingleton<IWatchdogThread, SynchronizerWatchdogThread>();
 
             container.Register<IFQueueController, SynchronizerController>(Lifestyle.Scoped);

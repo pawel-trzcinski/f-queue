@@ -20,8 +20,10 @@ namespace FQueue
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(CommonContainerRegistrator));
 
-        public static void Register(Container container)
+        public static Container Register()
         {
+            Container container = new Container();
+
             _log.Info("Registering common");
 
             container.Options.DefaultScopedLifestyle = ScopedLifestyle.Flowing;
@@ -42,6 +44,7 @@ namespace FQueue
             container.RegisterSingleton<IConfigurationReader, ConfigurationReader>();
 
             container.RegisterSingleton<IDiskSpaceWatcher, DiskSpaceWatcher>();
+            container.RegisterSingleton<IWatcherFactory, WatcherFactory>();
 
             container.Register<IWriteVersionFileCommand, WriteVersionFileCommand>();
             container.RegisterSingleton<ICommandChain, CommandChain>();
@@ -63,6 +66,8 @@ namespace FQueue
             container.RegisterSingleton<IHealthChecker, HealthChecker>();
 
             container.RegisterSingleton<IControllerFactory, ControllerFactory>();
+
+            return container;
         }
     }
 }

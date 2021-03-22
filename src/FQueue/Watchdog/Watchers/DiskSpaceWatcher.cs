@@ -6,6 +6,7 @@ namespace FQueue.Watchdog.Watchers
 {
     public class DiskSpaceWatcher : IDiskSpaceWatcher
     {
+#warning TODO - unit tests
         private static readonly ILog _log = LogManager.GetLogger(typeof(DiskSpaceWatcher));
 
         private const long TWENTY_MEGABYTES = 20 * 1024 * 1024;

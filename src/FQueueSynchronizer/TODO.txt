@@ -1,5 +1,5 @@
 ﻿Plan działania:
-- mechanizm engines
+- mechanizm engines - TODO unit tests: abstract watchdog, concrete watchdogs, watchers, checkers
 - Node Controller methods
 - BE Controller methods
 - liveness readiness Controllers

@@ -51,9 +51,9 @@ namespace FQueue.Configuration
         /// Initializes a new instance of the <see cref="ConfigurationReader"/> class.
         /// </summary>
         /// <param name="configurationFilename">File to read configuration from.</param>
-        public ConfigurationReader(string configurationFilename)
+        public ConfigurationReader()
         {
-            this._configurationFilename = configurationFilename;
+            //this._configurationFilename = configurationFilename;
         }
     }
 }

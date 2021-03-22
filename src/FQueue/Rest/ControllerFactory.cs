@@ -40,7 +40,8 @@ namespace FQueue.Rest
             context.HttpContext.Features.Set(scope);
 
             _log.Debug("Getting controller from injection container");
-#warning TODO - routing to diferent controllers
+
+#warning TODO - tutaj trzeba będzie zdecydować co wyciągać, bo będzie controller standardowy + LivenessReadiness + w niemożliwej przyszłości monitoring
             return scope.GetInstance<IFQueueController>();
         }
 

@@ -25,11 +25,11 @@ namespace FQueue.Watchdog
         private CancellationTokenSource _cancellationTokenSource;
         private CancellationToken _cancellationToken;
 
-        private readonly IEnumerable<IWatcher> _watchers;
+        private readonly Func<IEnumerable<IWatcher>> _getWatchers;
 
-        protected WatchdogThread(IEnumerable<IWatcher> watchers)
+        protected WatchdogThread(Func<IEnumerable<IWatcher>> getWatchers)
         {
-            _watchers = watchers;
+            _getWatchers = getWatchers;
         }
 
         public void StartChecking(Action startAction, Action endAction)
@@ -87,7 +87,7 @@ namespace FQueue.Watchdog
                 {
                     bool allWatchersResult = true;
 
-                    foreach (IWatcher watcher in _watchers)
+                    foreach (IWatcher watcher in _getWatchers())
                     {
                         allWatchersResult = CheckSingleWatcher(watcher);
 

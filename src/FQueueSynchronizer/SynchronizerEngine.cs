@@ -1,7 +1,9 @@
-﻿using FQueue;
+﻿using System.Reflection;
+using FQueue;
 using FQueue.Configuration;
 using FQueue.Health;
 using FQueue.Watchdog;
+using FQueueSynchronizer.Rest;
 using log4net;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
@@ -31,6 +33,11 @@ namespace FQueueSynchronizer
         {
             _configurationReader = configurationReader;
             _healthChecker = healthChecker;
+        }
+
+        protected override Assembly GetControllerAssembly()
+        {
+            return typeof(SynchronizerController).Assembly;
         }
 
         protected override void StartSpecificLogic()

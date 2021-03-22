@@ -1,6 +1,8 @@
-﻿using FQueue;
+﻿using System.Reflection;
+using FQueue;
 using FQueue.Configuration;
 using FQueue.Watchdog;
+using FQueueNode.Rest;
 using log4net;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
@@ -18,6 +20,11 @@ namespace FQueueNode
             : base(watchdogThread, controllerFactory)
         {
             _configurationReader = configurationReader;
+        }
+
+        protected override Assembly GetControllerAssembly()
+        {
+            return typeof(NodeController).Assembly;
         }
 
         protected override void StartSpecificLogic()

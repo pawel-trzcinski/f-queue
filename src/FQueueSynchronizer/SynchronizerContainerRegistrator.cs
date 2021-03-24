@@ -4,8 +4,8 @@ using FQueue.Watchdog;
 using FQueueSynchronizer.Etcd;
 using FQueueSynchronizer.Rest;
 using FQueueSynchronizer.Watchdog;
+using FQueueSynchronizer.Watchdog.BackgroundTasks;
 using FQueueSynchronizer.Watchdog.Checkers;
-using FQueueSynchronizer.Watchdog.Watchers;
 using log4net;
 using SimpleInjector;
 
@@ -25,7 +25,7 @@ namespace FQueueSynchronizer
             container.RegisterSingleton<IEtcdWrapper, EtcdWrapper>(); // singleton because this wrapper is using IEtcdCompoundClientFactory every time
 
             container.Register<ILeaderElectionWatcher, LeaderElectionWatcher>();
-            container.RegisterSingleton<IEtcdLeaseChecker, EtcdLeaseChecker>();
+            container.RegisterSingleton<IEtcdLeaseBackgroundTask, EtcdLeaseBackgroundTask>();
             container.RegisterSingleton<IWatchdogThread, SynchronizerWatchdogThread>();
 
             container.Register<IFQueueController, SynchronizerController>(Lifestyle.Scoped);

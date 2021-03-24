@@ -2,16 +2,16 @@
 using System.IO;
 using log4net;
 
-namespace FQueue.Watchdog.Watchers
+namespace FQueue.Watchdog.Checkers
 {
-    public class DiskSpaceWatcher : IDiskSpaceWatcher
+    public class DiskSpaceChecker : IDiskSpaceChecker
     {
 #warning TODO - unit tests
-        private static readonly ILog _log = LogManager.GetLogger(typeof(DiskSpaceWatcher));
+        private static readonly ILog _log = LogManager.GetLogger(typeof(DiskSpaceChecker));
 
         private const long TWENTY_MEGABYTES = 20 * 1024 * 1024;
 
-        public string Name => nameof(DiskSpaceWatcher);
+        public string Name => nameof(DiskSpaceChecker);
 
         public bool Check()
         {

@@ -1,5 +1,5 @@
 ﻿using FQueue.Watchdog;
-using FQueue.Watchdog.Watchers;
+using FQueue.Watchdog.Checkers;
 
 namespace FQueueNode.Watchdog
 {
@@ -7,8 +7,8 @@ namespace FQueueNode.Watchdog
     {
 #warning TODO - unit tests
 
-        public NodeWatchdogThread(IWatcherFactory watcherFactory)
-            : base(() => new IWatcher[] {watcherFactory.CreateWatcher<IDiskSpaceWatcher>()})
+        public NodeWatchdogThread(ICheckerFactory checkerFactory)
+            : base(() => new IChecker[] {checkerFactory.CreateChecker<IDiskSpaceChecker>()})
         {
         }
     }

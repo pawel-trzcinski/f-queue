@@ -1,10 +1,10 @@
 ﻿using System;
 using FQueue.Configuration;
 using FQueueSynchronizer.Etcd;
-using FQueueSynchronizer.Watchdog.Checkers;
+using FQueueSynchronizer.Watchdog.BackgroundTasks;
 using log4net;
 
-namespace FQueueSynchronizer.Watchdog.Watchers
+namespace FQueueSynchronizer.Watchdog.Checkers
 {
     public class LeaderElectionWatcher : ILeaderElectionWatcher
     {
@@ -12,15 +12,15 @@ namespace FQueueSynchronizer.Watchdog.Watchers
         private static readonly ILog _log = LogManager.GetLogger(typeof(LeaderElectionWatcher));
 
         private readonly IEtcdWrapper _etcdWrapper;
-        private readonly IEtcdLeaseChecker _etcdLeaseChecker;
+        private readonly IEtcdLeaseBackgroundTask _etcdLeaseBackgroundTask;
         private readonly IServerUri _serverUri;
 
         public string Name => nameof(LeaderElectionWatcher);
 
-        public LeaderElectionWatcher(IEtcdWrapper etcdWrapper, IEtcdLeaseChecker etcdLeaseChecker, IServerUri serverUri)
+        public LeaderElectionWatcher(IEtcdWrapper etcdWrapper, IEtcdLeaseBackgroundTask etcdLeaseBackgroundTask, IServerUri serverUri)
         {
             _etcdWrapper = etcdWrapper;
-            _etcdLeaseChecker = etcdLeaseChecker;
+            _etcdLeaseBackgroundTask = etcdLeaseBackgroundTask;
             _serverUri = serverUri;
         }
 
@@ -28,7 +28,7 @@ namespace FQueueSynchronizer.Watchdog.Watchers
         {
             try
             {
-                return _etcdWrapper.LockLeader(_serverUri.Uri, _etcdLeaseChecker.LeaseId);
+                return _etcdWrapper.LockLeader(_serverUri.Uri, _etcdLeaseBackgroundTask.LeaseId);
             }
             catch (Exception ex)
             {

@@ -2,37 +2,37 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using FQueue.Watchdog.Watchers;
+using FQueue.Watchdog.Checkers;
 using log4net;
 
 namespace FQueue.Watchdog
 {
     public abstract class WatchdogThread : IWatchdogThread
     {
-#warning TODO - unit tests
         private static readonly ILog _log = LogManager.GetLogger(typeof(WatchdogThread));
 
         private const int TASK_CANCEL_TIMEOUT_S = 10;
-        private const int CHECK_INTERVAL_S = 5;
+        private const int CHECK_INTERVAL_MS = 5000;
+        protected static int _checkIntervalMs = CHECK_INTERVAL_MS;
 
         private Task _checkTask;
 
-        private Action _startAction;
-        private Action _endAction;
+        private Action _enableAction;
+        private Action _disableAction;
         private bool _logicRunning;
 
         private bool _watchdogRunning;
         private CancellationTokenSource _cancellationTokenSource;
         private CancellationToken _cancellationToken;
 
-        private readonly Func<IEnumerable<IWatcher>> _getWatchers;
+        private readonly Func<IEnumerable<IChecker>> _getCheckers;
 
-        protected WatchdogThread(Func<IEnumerable<IWatcher>> getWatchers)
+        protected WatchdogThread(Func<IEnumerable<IChecker>> getCheckers)
         {
-            _getWatchers = getWatchers;
+            _getCheckers = getCheckers;
         }
 
-        public void StartChecking(Action startAction, Action endAction)
+        public void StartChecking(Action enableAction, Action disableAction)
         {
             if (_watchdogRunning)
             {
@@ -41,13 +41,13 @@ namespace FQueue.Watchdog
 
             _log.Info("Starting watchdog");
 
-            _startAction = startAction;
-            _endAction = endAction;
+            _enableAction = enableAction;
+            _disableAction = disableAction;
 
             _cancellationTokenSource = new CancellationTokenSource();
             _cancellationToken = _cancellationTokenSource.Token;
 
-            StartSpecificCheckers();
+            StartSpecificBackgroundTasks();
             _checkTask = Task.Run(CheckInLoop, _cancellationToken);
             
             _watchdogRunning = true;
@@ -62,7 +62,7 @@ namespace FQueue.Watchdog
 
             _log.Info("Stopping watchdog");
 
-            StopSpecificCheckers();
+            StopSpecificBackgroundTasks();
 
             _cancellationTokenSource.Cancel();
             if (!_checkTask.Wait(TimeSpan.FromSeconds(TASK_CANCEL_TIMEOUT_S)))
@@ -71,11 +71,11 @@ namespace FQueue.Watchdog
             }
         }
 
-        protected virtual void StartSpecificCheckers()
+        protected virtual void StartSpecificBackgroundTasks()
         {
         }
 
-        protected virtual void StopSpecificCheckers()
+        protected virtual void StopSpecificBackgroundTasks()
         {
         }
 
@@ -87,7 +87,7 @@ namespace FQueue.Watchdog
                 {
                     bool allWatchersResult = true;
 
-                    foreach (IWatcher watcher in _getWatchers())
+                    foreach (IChecker watcher in _getCheckers())
                     {
                         allWatchersResult = CheckSingleWatcher(watcher);
 
@@ -101,18 +101,18 @@ namespace FQueue.Watchdog
                     if (allWatchersResult && !_logicRunning)
                     {
                         _log.Info("All watchers ok. Starting logic.");
-                        _startAction();
+                        _enableAction();
                         _logicRunning = true;
                     }
                     
                     if(!allWatchersResult && _logicRunning)
                     {
                         _log.Warn("Not all watchers are ok. Stopping logic.");
-                        _endAction();
+                        _disableAction();
                         _logicRunning = false;
                     }
 
-                    _cancellationToken.WaitHandle.WaitOne(TimeSpan.FromSeconds(CHECK_INTERVAL_S));
+                    _cancellationToken.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(_checkIntervalMs));
                 }
             }
             catch (Exception ex)
@@ -121,7 +121,7 @@ namespace FQueue.Watchdog
             }
         }
 
-        private static bool CheckSingleWatcher(IWatcher watcher)
+        private static bool CheckSingleWatcher(IChecker watcher)
         {
             try
             {

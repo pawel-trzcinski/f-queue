@@ -7,12 +7,11 @@ using FQueue.Configuration;
 using FQueueSynchronizer.Etcd;
 using log4net;
 
-namespace FQueueSynchronizer.Watchdog.Checkers
+namespace FQueueSynchronizer.Watchdog.BackgroundTasks
 {
-    public class EtcdLeaseChecker : IEtcdLeaseChecker
+    public class EtcdLeaseBackgroundTask : IEtcdLeaseBackgroundTask
     {
-#warning TODO - unit tests
-        private static readonly ILog _log = LogManager.GetLogger(typeof(EtcdLeaseChecker));
+        private static readonly ILog _log = LogManager.GetLogger(typeof(EtcdLeaseBackgroundTask));
 
         private const int TASK_CANCEL_TIMEOUT_S = 5;
 
@@ -26,7 +25,7 @@ namespace FQueueSynchronizer.Watchdog.Checkers
 
         public long LeaseId { get; private set; }
 
-        public EtcdLeaseChecker(IEtcdWrapper etcdWrapper, IServerUri serverUri, IConfigurationReader configurationReader)
+        public EtcdLeaseBackgroundTask(IEtcdWrapper etcdWrapper, IServerUri serverUri, IConfigurationReader configurationReader)
         {
             _etcdWrapper = etcdWrapper;
             _serverUri = serverUri;
@@ -40,7 +39,7 @@ namespace FQueueSynchronizer.Watchdog.Checkers
             return BitConverter.ToInt64(bytes);
         }
 
-        public void StartChecking()
+        public void Start()
         {
             if (_checkingRunning)
             {
@@ -58,7 +57,7 @@ namespace FQueueSynchronizer.Watchdog.Checkers
             _checkingRunning = true;
         }
 
-        public void StopChecking()
+        public void Stop()
         {
             if (!_checkingRunning)
             {
@@ -70,7 +69,7 @@ namespace FQueueSynchronizer.Watchdog.Checkers
 
             if (!_keepAliveTask.Wait(TimeSpan.FromSeconds(TASK_CANCEL_TIMEOUT_S)))
             {
-                _log.Error($"{nameof(EtcdLeaseChecker)} did not end in allowed time");
+                _log.Error($"{nameof(EtcdLeaseBackgroundTask)} did not end in allowed time");
             }
 
             _checkingRunning = false;

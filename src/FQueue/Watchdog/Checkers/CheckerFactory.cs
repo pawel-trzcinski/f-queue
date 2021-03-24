@@ -1,18 +1,18 @@
 ﻿using SimpleInjector;
 
-namespace FQueue.Watchdog.Watchers
+namespace FQueue.Watchdog.Checkers
 {
-    public class WatcherFactory : IWatcherFactory
+    public class CheckerFactory : ICheckerFactory
     {
 #warning TODO - unit tests
         private readonly Container _container;
 
-        public WatcherFactory(Container container)
+        public CheckerFactory(Container container)
         {
             _container = container;
         }
 
-        public IWatcher CreateWatcher<T>() where T : class, IWatcher
+        public IChecker CreateChecker<T>() where T : class, IChecker
         {
             return _container.GetInstance<T>();
         }

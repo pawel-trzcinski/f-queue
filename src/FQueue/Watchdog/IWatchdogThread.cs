@@ -4,7 +4,7 @@ namespace FQueue.Watchdog
 {
     public interface IWatchdogThread
     {
-        void StartChecking(Action startAction, Action endAction);
+        void StartChecking(Action enableAction, Action disableAction);
         void StopChecking();
     }
 }

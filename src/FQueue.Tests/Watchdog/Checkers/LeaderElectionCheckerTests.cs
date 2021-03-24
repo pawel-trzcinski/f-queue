@@ -3,8 +3,8 @@
 namespace FQueue.Tests.Watchdog.Checkers
 {
     [TestFixture]
-    public class EtcdLeaseCheckerTests
+    public class LeaderElectionCheckerTests
     {
-#warning TODO   
+#warning TODO
     }
 }

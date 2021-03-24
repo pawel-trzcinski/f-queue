@@ -11,7 +11,7 @@ using FQueue.FileSystem.VersionFile;
 using FQueue.Health;
 using FQueue.QueueLockContext;
 using FQueue.Rest;
-using FQueue.Watchdog.Watchers;
+using FQueue.Watchdog.Checkers;
 using SimpleInjector;
 
 namespace FQueue
@@ -43,8 +43,8 @@ namespace FQueue
 
             container.RegisterSingleton<IConfigurationReader, ConfigurationReader>();
 
-            container.RegisterSingleton<IDiskSpaceWatcher, DiskSpaceWatcher>();
-            container.RegisterSingleton<IWatcherFactory, WatcherFactory>();
+            container.RegisterSingleton<IDiskSpaceChecker, DiskSpaceChecker>();
+            container.RegisterSingleton<ICheckerFactory, CheckerFactory>();
 
             container.Register<IWriteVersionFileCommand, WriteVersionFileCommand>();
             container.RegisterSingleton<ICommandChain, CommandChain>();

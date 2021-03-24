@@ -1,7 +1,7 @@
 ﻿using FQueue.Watchdog;
-using FQueue.Watchdog.Watchers;
+using FQueue.Watchdog.Checkers;
+using FQueueSynchronizer.Watchdog.BackgroundTasks;
 using FQueueSynchronizer.Watchdog.Checkers;
-using FQueueSynchronizer.Watchdog.Watchers;
 
 namespace FQueueSynchronizer.Watchdog
 {
@@ -9,22 +9,22 @@ namespace FQueueSynchronizer.Watchdog
     {
 #warning TODO - unit tests
 
-        private readonly IEtcdLeaseChecker _etcdLeaseChecker;
+        private readonly IEtcdLeaseBackgroundTask _etcdLeaseBackgroundTask;
 
-        public SynchronizerWatchdogThread(IWatcherFactory watcherFactory, IEtcdLeaseChecker etcdLeaseChecker)
-            : base(() => new IWatcher[] {watcherFactory.CreateWatcher<ILeaderElectionWatcher>(), watcherFactory.CreateWatcher<IDiskSpaceWatcher>()})
+        public SynchronizerWatchdogThread(ICheckerFactory checkerFactory, IEtcdLeaseBackgroundTask etcdLeaseBackgroundTask)
+            : base(() => new IChecker[] {checkerFactory.CreateChecker<ILeaderElectionWatcher>(), checkerFactory.CreateChecker<IDiskSpaceChecker>()})
         {
-            _etcdLeaseChecker = etcdLeaseChecker;
+            _etcdLeaseBackgroundTask = etcdLeaseBackgroundTask;
         }
 
-        protected override void StartSpecificCheckers()
+        protected override void StartSpecificBackgroundTasks()
         {
-            _etcdLeaseChecker.StartChecking();
+            _etcdLeaseBackgroundTask.Start();
         }
 
-        protected override void StopSpecificCheckers()
+        protected override void StopSpecificBackgroundTasks()
         {
-            _etcdLeaseChecker.StopChecking();
+            _etcdLeaseBackgroundTask.Stop();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace FQueue.Tests.Configuration
     [TestFixture]
     public class FQueueConfigurationTests
     {
-        private static FQueueConfiguration CreateConfiguration()
+        public static FQueueConfiguration CreateConfiguration()
         {
             return new FQueueConfiguration
             (

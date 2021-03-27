@@ -7,7 +7,6 @@ namespace FQueueNode
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     public class NodeArguments : CommandLineArguments
     {
-#warning TODO - unit tests
         [Option('u', URI, HelpText = "Endpoint of Synchronizer API.", Required = true)]
         public string SynchronizerEndpoint
         {

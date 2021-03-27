@@ -12,7 +12,7 @@ namespace FQueueSynchronizer.Watchdog
         private readonly IEtcdLeaseBackgroundTask _etcdLeaseBackgroundTask;
 
         public SynchronizerWatchdogThread(ICheckerFactory checkerFactory, IEtcdLeaseBackgroundTask etcdLeaseBackgroundTask)
-            : base(() => new IChecker[] {checkerFactory.CreateChecker<ILeaderElectionWatcher>(), checkerFactory.CreateChecker<IDiskSpaceChecker>()})
+            : base(() => new IChecker[] {checkerFactory.CreateChecker<ILeaderElectionChecker>(), checkerFactory.CreateChecker<IDiskSpaceChecker>()})
         {
             _etcdLeaseBackgroundTask = etcdLeaseBackgroundTask;
         }

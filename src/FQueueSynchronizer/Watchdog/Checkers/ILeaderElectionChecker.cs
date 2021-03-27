@@ -2,7 +2,7 @@
 
 namespace FQueueSynchronizer.Watchdog.Checkers
 {
-    public interface ILeaderElectionWatcher : IChecker
+    public interface ILeaderElectionChecker : IChecker
     {
     }
 

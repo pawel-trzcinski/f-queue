@@ -10,8 +10,6 @@ namespace FQueueNode
 {
     public class NodeEngine : Engine
     {
-#warning TODO
-#warning TODO - unit tests
         private static readonly ILog _log = LogManager.GetLogger(typeof(NodeEngine));
 
         private readonly IConfigurationReader _configurationReader;

@@ -25,7 +25,7 @@ namespace FQueue.Watchdog
         private CancellationTokenSource _cancellationTokenSource;
         private CancellationToken _cancellationToken;
 
-        private readonly Func<IEnumerable<IChecker>> _getCheckers;
+        protected readonly Func<IEnumerable<IChecker>> _getCheckers;
 
         protected WatchdogThread(Func<IEnumerable<IChecker>> getCheckers)
         {
@@ -36,7 +36,7 @@ namespace FQueue.Watchdog
         {
             if (_watchdogRunning)
             {
-               throw new InvalidOperationException();
+                throw new InvalidOperationException();
             }
 
             _log.Info("Starting watchdog");
@@ -49,7 +49,7 @@ namespace FQueue.Watchdog
 
             StartSpecificBackgroundTasks();
             _checkTask = Task.Run(CheckInLoop, _cancellationToken);
-            
+
             _watchdogRunning = true;
         }
 
@@ -104,8 +104,8 @@ namespace FQueue.Watchdog
                         _enableAction();
                         _logicRunning = true;
                     }
-                    
-                    if(!allWatchersResult && _logicRunning)
+
+                    if (!allWatchersResult && _logicRunning)
                     {
                         _log.Warn("Not all watchers are ok. Stopping logic.");
                         _disableAction();

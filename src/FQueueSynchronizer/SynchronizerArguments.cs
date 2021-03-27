@@ -7,7 +7,6 @@ namespace FQueueSynchronizer
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     public class SynchronizerArguments : CommandLineArguments
     {
-#warning TODO - unit tests
         [Option('u', URI, HelpText = "Etcd address", Required = true)]
         public string EtcdEndpoint
         {

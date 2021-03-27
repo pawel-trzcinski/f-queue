@@ -24,7 +24,7 @@ namespace FQueueSynchronizer
             container.RegisterSingleton<IEtcdCompoundClientFactory, EtcdCompoundClientFactory>();
             container.RegisterSingleton<IEtcdWrapper, EtcdWrapper>(); // singleton because this wrapper is using IEtcdCompoundClientFactory every time
 
-            container.Register<ILeaderElectionWatcher, LeaderElectionWatcher>();
+            container.Register<ILeaderElectionChecker, LeaderElectionChecker>();
             container.RegisterSingleton<IEtcdLeaseBackgroundTask, EtcdLeaseBackgroundTask>();
             container.RegisterSingleton<IWatchdogThread, SynchronizerWatchdogThread>();
 

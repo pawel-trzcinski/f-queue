@@ -6,18 +6,20 @@ namespace FQueue.Watchdog.Checkers
 {
     public class DiskSpaceChecker : IDiskSpaceChecker
     {
-#warning TODO - unit tests
         private static readonly ILog _log = LogManager.GetLogger(typeof(DiskSpaceChecker));
 
-        private const long TWENTY_MEGABYTES = 20 * 1024 * 1024;
+        public const long TWENTY_MEGABYTES = 20 * 1024 * 1024;
 
         public string Name => nameof(DiskSpaceChecker);
 
+        protected virtual long GetAvailableFreeSpace()
+        {
+            return new DriveInfo(Environment.CurrentDirectory).AvailableFreeSpace;
+        }
+
         public bool Check()
         {
-            var driveInfo = new DriveInfo(Environment.CurrentDirectory);
-
-            if (driveInfo.AvailableFreeSpace >= TWENTY_MEGABYTES)
+            if (GetAvailableFreeSpace() >= TWENTY_MEGABYTES)
             {
                 return true;
             }

@@ -9,7 +9,6 @@ namespace FQueue.Configuration
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(CommandLineArguments));
 
-#warning TODO - unit test
         protected const string URI = "uri";
 
         public string ConfigurationUri { get; protected set; }

@@ -6,18 +6,17 @@ using log4net;
 
 namespace FQueueSynchronizer.Watchdog.Checkers
 {
-    public class LeaderElectionWatcher : ILeaderElectionWatcher
+    public class LeaderElectionChecker : ILeaderElectionChecker
     {
-#warning TODO - unit tests
-        private static readonly ILog _log = LogManager.GetLogger(typeof(LeaderElectionWatcher));
+        private static readonly ILog _log = LogManager.GetLogger(typeof(LeaderElectionChecker));
 
         private readonly IEtcdWrapper _etcdWrapper;
         private readonly IEtcdLeaseBackgroundTask _etcdLeaseBackgroundTask;
         private readonly IServerUri _serverUri;
 
-        public string Name => nameof(LeaderElectionWatcher);
+        public string Name => nameof(LeaderElectionChecker);
 
-        public LeaderElectionWatcher(IEtcdWrapper etcdWrapper, IEtcdLeaseBackgroundTask etcdLeaseBackgroundTask, IServerUri serverUri)
+        public LeaderElectionChecker(IEtcdWrapper etcdWrapper, IEtcdLeaseBackgroundTask etcdLeaseBackgroundTask, IServerUri serverUri)
         {
             _etcdWrapper = etcdWrapper;
             _etcdLeaseBackgroundTask = etcdLeaseBackgroundTask;

@@ -12,6 +12,8 @@ namespace FQueue.Tests.Watchdog
     [TestFixture]
     public class WatchdogThreadTests
     {
+        private static readonly Random _random = new Random();
+
         private class WatchdogThreadTester : WatchdogThread
         {
             private readonly Action _startBgTask;
@@ -170,7 +172,59 @@ namespace FQueue.Tests.Watchdog
         [TestCase(7, 7)]
         public void CheckerFailureDisablesWatchdog(int checkersCount, int failedCount)
         {
-#warning TODO
+            object executionObjectsLock = new object();
+            List<Guid> executionSteps = new List<Guid>();
+            Guid enableActionId = Guid.NewGuid();
+            Guid disableActionId = Guid.NewGuid();
+
+            bool returnFailures = false;
+
+            bool[] secondCheckResult = Enumerable.Range(0, checkersCount).Select(p => !(p < failedCount)).OrderBy(p => _random.NextDouble()).ToArray();
+
+            List<IChecker> checkers = new List<IChecker>();
+
+            for (int i = 0; i < checkersCount; i++)
+            {
+                int i1 = i;
+                Mock<IChecker> checkerMock = new Mock<IChecker>();
+                checkerMock.Setup(p => p.Name).Returns($"Checker{i}");
+                checkerMock.Setup(p => p.Check()).Returns(() => !returnFailures || secondCheckResult[i1]);
+                checkers.Add(checkerMock.Object);
+            }
+
+            WatchdogThreadTester tester = new WatchdogThreadTester(() => checkers, 1, () => { }, () => { });
+
+            tester.StartChecking
+            (
+                () =>
+                {
+                    lock (executionObjectsLock)
+                    {
+                        executionSteps.Add(enableActionId);
+                        returnFailures = true;
+                    }
+                },
+                () =>
+                {
+                    lock (executionObjectsLock)
+                    {
+                        executionSteps.Add(disableActionId);
+                        returnFailures = false;
+                    }
+                }
+            );
+
+
+            while (executionSteps.Count < 3)
+            {
+                Thread.Sleep(50);
+            }
+
+            tester.StopChecking();
+
+            Assert.AreEqual(enableActionId, executionSteps[0]);
+            Assert.AreEqual(disableActionId, executionSteps[1]);
+            Assert.AreEqual(enableActionId, executionSteps[2]);
         }
 
         [Test]

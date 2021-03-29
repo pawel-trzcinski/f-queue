@@ -4,9 +4,12 @@ namespace FQueue.FileSystem
 {
     public class CommandChain : Command, ICommandChain
     {
-#warning TODO - unit tests
-
         private readonly List<ICommand> _commands = new List<ICommand>();
+
+        public CommandChain()
+            : base(nameof(CommandChain))
+        {
+        }
 
         protected override bool ExecuteWithNoGuard()
         {
@@ -23,7 +26,7 @@ namespace FQueue.FileSystem
 
         protected override void RollbackWithNoGuard()
         {
-            for (int i = _commands.Count - 1; i >= 0; i++)
+            for (int i = _commands.Count - 1; i >= 0; --i)
             {
                 ICommand command = _commands[i];
 
@@ -37,6 +40,7 @@ namespace FQueue.FileSystem
         public void Add(ICommand command)
         {
             _commands.Add(command);
+            InputDataSet = true;
         }
     }
 }

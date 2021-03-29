@@ -2,6 +2,8 @@
 {
     public interface ICommand
     {
+        string Name { get; }
+
         /// <summary>
         /// Indicates if execution was started for this command
         /// </summary>

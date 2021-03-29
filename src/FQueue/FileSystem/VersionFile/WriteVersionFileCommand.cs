@@ -14,6 +14,7 @@ namespace FQueue.FileSystem.VersionFile
         private string _previousState;
 
         public WriteVersionFileCommand(IFileAbstraction fileAbstraction)
+            : base(nameof(WriteVersionFileCommand))
         {
             _fileAbstraction = fileAbstraction;
         }

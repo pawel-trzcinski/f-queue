@@ -7,8 +7,6 @@ namespace FQueueSynchronizer.Watchdog
 {
     public class SynchronizerWatchdogThread : WatchdogThread
     {
-#warning TODO - unit tests
-
         private readonly IEtcdLeaseBackgroundTask _etcdLeaseBackgroundTask;
 
         public SynchronizerWatchdogThread(ICheckerFactory checkerFactory, IEtcdLeaseBackgroundTask etcdLeaseBackgroundTask)

@@ -5,9 +5,15 @@ namespace FQueue.FileSystem
     public abstract class Command : ICommand
     {
 #warning TODO - unit tests
+        public string Name { get; }
         public bool WasExecuted { get; private set; }
         public bool WasRolledBack { get; private set; }
         public bool InputDataSet { get; protected set; }
+
+        protected Command(string name)
+        {
+            Name = name;
+        }
 
         protected abstract bool ExecuteWithNoGuard();
         protected abstract void RollbackWithNoGuard();

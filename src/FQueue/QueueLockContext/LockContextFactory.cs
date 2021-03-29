@@ -15,7 +15,8 @@ namespace FQueue.QueueLockContext
 
         public ILockContext CreateLockContext(string queueName)
         {
-            return new FileLockContext(_queueContextFactory.GetContext(queueName));
+#warning TODO - to chyba zwykły dictionary z lockobject
+            return null;
         }
     }
 }

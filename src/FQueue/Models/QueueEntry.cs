@@ -3,14 +3,13 @@ using System.Text;
 using FQueue.Context;
 using FQueue.Data;
 using FQueue.Exceptions;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace FQueue.Models
 {
+    [Serializable]
     public class QueueEntry
     {
-#warning TODO - unit tests
         public string Tag { get; private set; }
         public string Data { get; private set; }
         public byte[] DataBytes { get; private set; }
@@ -19,6 +18,9 @@ namespace FQueue.Models
         {
         }
 
+        /// <summary>
+        /// Create queue entry from REST body request. Size check made.
+        /// </summary>
         public static QueueEntry FromRequestString(QueueContext context, string bodyRequestString, int dataFileMaximumSizeB)
         {
             JObject request = JObject.Parse(bodyRequestString);
@@ -30,7 +32,7 @@ namespace FQueue.Models
 
             byte[] dataBytes = Encoding.UTF8.GetBytes(bodyRequestString);
             int frameSize = DataProtocolAdapter.CalculateFrameSize(dataBytes.Length);
-            if (frameSize < dataFileMaximumSizeB)
+            if (frameSize > dataFileMaximumSizeB)
             {
                 throw new TooBigRequestException(context, dataFileMaximumSizeB, dataBytes.Length, frameSize);
             }
@@ -43,9 +45,25 @@ namespace FQueue.Models
             };
         }
 
-        public static QueueEntry FromBytes(byte[] data)
+        /// <summary>
+        /// Read QueueEntry from data file. No size check needed
+        /// </summary>
+        public static QueueEntry FromBytes(byte[] dataBytes)
         {
-            return JsonConvert.DeserializeObject<QueueEntry>(Encoding.UTF8.GetString(data));
+            string data = Encoding.UTF8.GetString(dataBytes);
+
+            JObject entryObject = JObject.Parse(data);
+            if (!entryObject.TryGetValue(nameof(QueueEntry.Tag), StringComparison.OrdinalIgnoreCase, out JToken token))
+            {
+                throw new ArgumentException($"No {nameof(QueueEntry.Tag)} found in input bytes");
+            }
+
+            return new QueueEntry
+            {
+                Data = data,
+                Tag = token.Value<string>(),
+                DataBytes = dataBytes
+            };
         }
     }
 }

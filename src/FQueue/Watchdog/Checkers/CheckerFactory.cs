@@ -4,7 +4,6 @@ namespace FQueue.Watchdog.Checkers
 {
     public class CheckerFactory : ICheckerFactory
     {
-#warning TODO - unit tests
         private readonly Container _container;
 
         public CheckerFactory(Container container)

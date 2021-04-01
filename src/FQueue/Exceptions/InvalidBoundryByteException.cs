@@ -19,7 +19,6 @@ namespace FQueue.Exceptions
 
         public override string ToString()
         {
-#warning TODO - unit test
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine(base.ToString());

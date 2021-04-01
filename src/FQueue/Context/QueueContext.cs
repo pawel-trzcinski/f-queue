@@ -1,5 +1,8 @@
-﻿namespace FQueue.Context
+﻿using System;
+
+namespace FQueue.Context
 {
+    [Serializable]
     public class QueueContext
     {
         public string QueueName { get; }

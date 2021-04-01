@@ -4,7 +4,6 @@ namespace FQueue.FileSystem
 {
     public abstract class Command : ICommand
     {
-#warning TODO - unit tests
         public string Name { get; }
         public bool WasExecuted { get; private set; }
         public bool WasRolledBack { get; private set; }
@@ -22,17 +21,17 @@ namespace FQueue.FileSystem
         {
             if (WasExecuted)
             {
-                throw new InvalidOperationException("Command has already been executed");
+                throw new InvalidOperationException($"Command {Name} has already been executed");
             }
 
             if (WasRolledBack)
             {
-                throw new InvalidOperationException("Command has already been rolled back");
+                throw new InvalidOperationException($"Command {Name} has already been rolled back");
             }
 
             if (!InputDataSet)
             {
-                throw new InvalidOperationException("Command has no input data set (even if it's no data)");
+                throw new InvalidOperationException($"Command {Name} has no input data set (even if it's no data)");
             }
 
             WasExecuted = true;
@@ -44,7 +43,7 @@ namespace FQueue.FileSystem
         {
             if (!WasExecuted)
             {
-                throw new InvalidOperationException("Command has not been executed");
+                throw new InvalidOperationException($"Command {Name} has not been executed");
             }
 
             WasRolledBack = true;

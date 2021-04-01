@@ -4,18 +4,19 @@ using JetBrains.Annotations;
 
 namespace FQueue.Exceptions
 {
+    [Serializable]
     public abstract class FQueueException : Exception
     {
         public QueueContext Context { get; }
 
-        protected FQueueException([NotNull] QueueContext context, string message, Exception innerException = null) : base(message, innerException)
+        protected FQueueException([NotNull] QueueContext context, string message, Exception innerException = null) 
+            : base(message, innerException)
         {
             Context = context;
         }
 
         public override string ToString()
         {
-#warning TODO - unit test
             return $"{base.ToString()}{Environment.NewLine}{Context}";
         }
     }

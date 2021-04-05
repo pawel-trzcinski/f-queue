@@ -4,7 +4,6 @@ namespace FQueue.Context
 {
     public class QueueContextFactory : IQueueContextFactory
     {
-#warning TODO - unit test
         private readonly ConcurrentDictionary<string, QueueContext> _contextDictionary = new ConcurrentDictionary<string, QueueContext>();
 
         public QueueContext GetContext(string queueName)

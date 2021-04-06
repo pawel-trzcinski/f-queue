@@ -18,5 +18,10 @@ namespace FQueue.Tests
         {
             return _stringToReturn;
         }
+
+        public StatusCodeResult Test()
+        {
+            throw new System.NotSupportedException();
+        }
     }
 }

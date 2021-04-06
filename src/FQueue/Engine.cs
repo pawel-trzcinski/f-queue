@@ -94,7 +94,11 @@ namespace FQueue
                     
                     services.AddSingleton(_controllerFactory);
 
-                    services.AddSwaggerGen(c => { c.SwaggerDoc(FQUEUE, new OpenApiInfo {Title = FQUEUE_CAPITALIZED, Version = "v1"}); });
+                    services.AddSwaggerGen(c =>
+                    {
+                        c.EnableAnnotations();
+                        c.SwaggerDoc(FQUEUE, new OpenApiInfo {Title = FQUEUE_CAPITALIZED, Version = "v1"});
+                    });
                 })
                 .Configure(app =>
                 {
@@ -102,7 +106,10 @@ namespace FQueue
                     app.UseRouting();
                     app.UseSwagger();
 
-                    app.UseSwaggerUI(c => { c.SwaggerEndpoint($"/swagger/{FQUEUE}/swagger.json", FQUEUE_CAPITALIZED); });
+                    app.UseSwaggerUI(c =>
+                    {
+                        c.SwaggerEndpoint($"/swagger/{FQUEUE}/swagger.json", FQUEUE_CAPITALIZED);
+                    });
 
                     app.UseEndpoints(endpoints =>
                     {

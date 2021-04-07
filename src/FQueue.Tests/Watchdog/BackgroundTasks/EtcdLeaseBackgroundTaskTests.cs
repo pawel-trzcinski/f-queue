@@ -29,7 +29,7 @@ namespace FQueue.Tests.Watchdog.BackgroundTasks
 
             FQueueConfiguration configuration = new FQueueConfiguration
             (
-                RestConfigurationTests.CreateConfiguration(),
+                RestNodeConfigurationTests.CreateConfiguration(),
                 RestConfigurationTests.CreateConfiguration(),
                 FilesConfigurationTests.CreateConfiguration(),
                 PerformanceConfigurationTests.CreateConfiguration(),
@@ -77,7 +77,7 @@ namespace FQueue.Tests.Watchdog.BackgroundTasks
 
             FQueueConfiguration configuration = new FQueueConfiguration
             (
-                RestConfigurationTests.CreateConfiguration(),
+                RestNodeConfigurationTests.CreateConfiguration(),
                 RestConfigurationTests.CreateConfiguration(),
                 FilesConfigurationTests.CreateConfiguration(),
                 PerformanceConfigurationTests.CreateConfiguration(),

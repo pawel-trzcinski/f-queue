@@ -39,6 +39,7 @@ namespace FQueue
             container.Register<IPerformanceConfigurationValidator, PerformanceConfigurationValidator>();
             container.Register<IThrottlingConfigurationValidator, ThrottlingConfigurationValidator>();
             container.Register<IRestConfigurationValidator, RestConfigurationValidator>();
+            container.Register<IRestNodeConfigurationValidator, RestNodeConfigurationValidator>();
             container.Register<IFQueueConfigurationValidator, FQueueConfigurationValidator>();
 
             container.RegisterSingleton<IConfigurationReader, ConfigurationReader>();

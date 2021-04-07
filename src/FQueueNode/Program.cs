@@ -48,6 +48,8 @@ namespace FQueueNode
 #warning TODO - cykliczne, niezależne porównywanie (jakaś synchronizacja z FileHandler - a może to kolejna operacja FileHandler?) spójności danych we repo (klika harmonogramów: {kiedy + moc sprawdzania})
 #warning TODO - każde wykrycie braku synchronizacji - przestawienie starszego repozytorium w tryb "synchronizing" (albo wywalamy w pierwotnej wersji) - jak możliwe; (jak ta sama wersja ale nie sync, to wywalamy serwis)
 
+#warning TODO - każdy docker Node MUSI mieć podmontowany katalog na backupy
+
 #warning TODO - sprawdzanie bazy danych, też sprawdza wsie CRC32
 
 #warning TODO - oddzielny kontroler dla synchronizacji danych

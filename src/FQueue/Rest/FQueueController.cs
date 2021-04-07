@@ -1,10 +1,12 @@
 ﻿using FQueue.Health;
 using FQueue.Rest.HeaderAttributes;
+using FQueue.Rest.SwaggerAttributes;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace FQueue.Rest
 {
+    [RejectedByThrottlingResponse]
     public abstract class FQueueController : Controller, IFQueueController
     {
 #warning TODO - unit tests
@@ -25,7 +27,8 @@ namespace FQueue.Rest
         [HttpGet("test")]
         [AddCorsHeader]
         [AddGitHubHeader]
-        [SwaggerOperation]
+        [SwaggerOperation(Summary = "Test method that does nothing.")]
+        [SuccessResponse]
         public StatusCodeResult Test()
         {
             return this.Ok();
@@ -34,6 +37,7 @@ namespace FQueue.Rest
         [HttpGet("health")]
         [AddCorsHeader]
         [AddGitHubHeader]
+#warning TODO - swagger attributes po tym jak już zdefiniujemy dokładnie co tu zwraca
         public IActionResult Health()
         {
             HealthStatus healthStatus = _healthChecker.GetHealthStatus();

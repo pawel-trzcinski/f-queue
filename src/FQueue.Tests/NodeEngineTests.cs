@@ -50,7 +50,7 @@ namespace FQueue.Tests
 
             FQueueConfiguration configuration = new FQueueConfiguration
             (
-                new RestConfiguration(port, ThrottlingConfigurationTests.CreateConfiguration()),
+                new RestNodeConfiguration(port, ThrottlingConfigurationTests.CreateConfiguration(), true),
                 RestConfigurationTests.CreateConfiguration(),
                 FilesConfigurationTests.CreateConfiguration(),
                 PerformanceConfigurationTests.CreateConfiguration(),

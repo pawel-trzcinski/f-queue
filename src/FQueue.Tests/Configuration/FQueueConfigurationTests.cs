@@ -12,7 +12,7 @@ namespace FQueue.Tests.Configuration
         {
             return new FQueueConfiguration
             (
-                RestConfigurationTests.CreateConfiguration(),
+                RestNodeConfigurationTests.CreateConfiguration(),
                 RestConfigurationTests.CreateConfiguration(),
                 FilesConfigurationTests.CreateConfiguration(),
                 PerformanceConfigurationTests.CreateConfiguration(),
@@ -24,6 +24,7 @@ namespace FQueue.Tests.Configuration
         public void ValidationOk()
         {
             Mock<IRestConfigurationValidator> restConfigurationValidatorMock = new Mock<IRestConfigurationValidator>();
+            Mock<IRestNodeConfigurationValidator> restNodeConfigurationValidatorMock = new Mock<IRestNodeConfigurationValidator>();
             Mock<IFilesConfigurationValidator> filesConfigurationValidatorMock = new Mock<IFilesConfigurationValidator>();
             Mock<IPerformanceConfigurationValidator> performanceConfigurationValidatorMock = new Mock<IPerformanceConfigurationValidator>();
             Mock<ILeaderElectionConfigurationValidator> leaderElectionConfigurationValidatorMock = new Mock<ILeaderElectionConfigurationValidator>();
@@ -35,10 +36,11 @@ namespace FQueue.Tests.Configuration
                 leaderElectionConfigurationValidatorMock.Object,
                 filesConfigurationValidatorMock.Object,
                 performanceConfigurationValidatorMock.Object,
-                restConfigurationValidatorMock.Object
+                restConfigurationValidatorMock.Object, 
+                restNodeConfigurationValidatorMock.Object
             ).Validate(configuration));
 
-            restConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.RestNode), Times.Once);
+            restNodeConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.RestNode), Times.Once);
             restConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.RestSynchronizer), Times.Once);
             filesConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.Files), Times.Once);
             performanceConfigurationValidatorMock.Verify(validator => validator.Validate(configuration.Performance), Times.Once);

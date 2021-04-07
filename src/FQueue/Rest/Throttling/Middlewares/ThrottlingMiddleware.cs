@@ -31,7 +31,7 @@ namespace FQueue.Rest.Throttling.Middlewares
                 if (enqueueStatus != EnqueueStatus.AllowExecution && !context.RequestAborted.IsCancellationRequested)
                 {
                     var responseFeature = context.Features.Get<IHttpResponseFeature>();
-                    responseFeature.StatusCode = StatusCodes.Status503ServiceUnavailable;
+                    responseFeature.StatusCode = StatusCodes.Status429TooManyRequests;
                     responseFeature.ReasonPhrase = enqueueStatus.ToString();
 
                     return;

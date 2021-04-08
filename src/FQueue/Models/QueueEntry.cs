@@ -8,9 +8,8 @@ using Newtonsoft.Json.Linq;
 namespace FQueue.Models
 {
     [Serializable]
-    public class QueueEntry
+    public class QueueEntry : TagObject
     {
-        public string Tag { get; private set; }
         public string Data { get; private set; }
         public byte[] DataBytes { get; private set; }
 

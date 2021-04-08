@@ -15,6 +15,11 @@ namespace FQueue.Rest
 
         private readonly IHealthChecker _healthChecker;
 
+        public ControllerContext Context
+        {
+            set => ControllerContext = value;
+        }
+
         protected FQueueController(IHealthChecker healthChecker)
         {
             this._healthChecker = healthChecker;
@@ -47,7 +52,7 @@ namespace FQueue.Rest
                 return StatusCode(500);
             }
 
-            return Content(((int)healthStatus).ToString());
+            return Content(((int) healthStatus).ToString());
         }
     }
 }

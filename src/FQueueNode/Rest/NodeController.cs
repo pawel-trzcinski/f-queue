@@ -1,6 +1,8 @@
-﻿using FQueue;
+﻿using System.IO;
+using FQueue;
 using Microsoft.AspNetCore.Mvc;
 using FQueue.Health;
+using FQueue.Models;
 using FQueue.Rest;
 using FQueue.Rest.SwaggerAttributes;
 using Swashbuckle.AspNetCore.Annotations;
@@ -64,10 +66,10 @@ namespace FQueueNode.Rest
         [MaintenancePendingResponse]
         [QueueNotFoundResponse]
         [QueueDeadResponse]
-        public int Count([FromRoute] [QueueNameParameter] string queueName)
+        public string Count([FromRoute] [QueueNameParameter] string queueName)
         {
 #warning TODO
-            return 0;
+            return 0.ToString();
         }
 
         [HttpGet(QUEUE_NAME_PATH_TEMPLATE + "/" + METHOD_PEEK)]
@@ -109,11 +111,21 @@ namespace FQueueNode.Rest
         (
             [FromRoute] [QueueNameParameter] string queueName,
             [FromBody]
-            [SwaggerRequestBody(Description = "JSON object or JSON array of objects that are to be enqueued. Every objects must have **Tag** field defined.", Required = true)]
-            string entry
+            [SwaggerRequestBody(Description = "JSON object or JSON array of objects that are to be enqueued. Every objects must have **Tag** field defined. Any other JSON structure may be added inside the object.", Required = true)]
+            // this parameter is for swagger documentation only
+            TagObject entry
         )
         {
-#warning TODO - entry musi być brane ze strumienia - czy na pewno ????
+            if (HttpContext.Request.Body.CanSeek)
+            {
+                HttpContext.Request.Body.Seek(0, SeekOrigin.Begin);
+            }
+
+            string entryString;
+            using (StreamReader reader = new StreamReader(HttpContext.Request.BodyReader.AsStream()))
+            {
+                entryString = reader.ReadToEnd();
+            }
 
 #warning TODO
             return null;

@@ -8,6 +8,11 @@ namespace FQueue.Tests
     {
         private readonly string _stringToReturn;
 
+        public ControllerContext Context
+        {
+            set => ControllerContext = value;
+        }
+
         public TestController(string stringToReturn)
         {
             _stringToReturn = stringToReturn;

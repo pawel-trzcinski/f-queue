@@ -10,13 +10,14 @@ namespace FQueue.Tests.Configuration
     {
         public static ThrottlingConfiguration CreateConfiguration
         (
+            bool enabled = true,
             int concurrentRequestsLimit = 5,
             int queueLimit = 50,
             int queueTimeoutS = 30,
             int maximumServerConnections = 100
         )
         {
-            return new ThrottlingConfiguration(concurrentRequestsLimit, queueLimit, queueTimeoutS, maximumServerConnections);
+            return new ThrottlingConfiguration(enabled, concurrentRequestsLimit, queueLimit, queueTimeoutS, maximumServerConnections);
         }
 
         [Test]

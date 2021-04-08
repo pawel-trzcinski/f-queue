@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Reflection;
 using FQueue.Configuration;
 using FQueue.Rest.Throttling.Middlewares;
@@ -74,6 +75,8 @@ namespace FQueue
             _webHost = WebHost.CreateDefaultBuilder(null)
                 .UseKestrel(options =>
                 {
+                    options.AllowSynchronousIO = true;
+
                     options.AddServerHeader = false;
                     options.Limits.MaxConcurrentConnections = restConfiguration.Throttling.MaximumServerConnections;
 
@@ -98,11 +101,16 @@ namespace FQueue
                     {
                         c.EnableAnnotations();
                         c.SwaggerDoc(FQUEUE, new OpenApiInfo {Title = FQUEUE_CAPITALIZED, Version = "v1"});
+                        c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
                     });
                 })
                 .Configure(app =>
                 {
-                    app.UseMiddleware<ThrottlingMiddleware>(restConfiguration.Throttling);
+                    if (restConfiguration.Throttling.Enabled)
+                    {
+                        app.UseMiddleware<ThrottlingMiddleware>(restConfiguration.Throttling);
+                    }
+
                     app.UseRouting();
                     app.UseSwagger();
 

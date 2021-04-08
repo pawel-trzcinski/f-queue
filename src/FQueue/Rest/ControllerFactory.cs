@@ -1,5 +1,6 @@
 ﻿using System;
 using log4net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using SimpleInjector;
@@ -34,6 +35,7 @@ namespace FQueue.Rest
             {
                 throw new ArgumentNullException(nameof(context));
             }
+
             Scope scope = ThreadScopedLifestyle.BeginScope(_container);
 
             _log.Debug("Seting Scope feature");
@@ -42,7 +44,10 @@ namespace FQueue.Rest
             _log.Debug("Getting controller from injection container");
 
 #warning TODO - tutaj trzeba będzie zdecydować co wyciągać, bo będzie controller standardowy + LivenessReadiness + w niemożliwej przyszłości monitoring
-            return scope.GetInstance<IFQueueController>();
+            IFQueueController result = scope.GetInstance<IFQueueController>();
+            context.HttpContext.Request.EnableBuffering();
+            result.Context = context;
+            return result;
         }
 
         /// <inheritdoc/>

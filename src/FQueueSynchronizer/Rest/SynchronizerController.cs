@@ -5,9 +5,6 @@ using FQueue.Rest;
 
 namespace FQueueSynchronizer.Rest
 {
-    /// <summary>
-    /// Default RandomSimulation controller.
-    /// </summary>
     [Route(Engine.FQUEUE + "/" + SYNC)]
     public class SynchronizerController : FQueueController, ISynchronizerController
     {

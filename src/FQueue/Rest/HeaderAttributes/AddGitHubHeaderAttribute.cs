@@ -14,7 +14,7 @@
         /// <summary>
         /// GitHub header value.
         /// </summary>
-        private const string GIT_HUB_ADDRESS = "https://github.com/pawel-trzcinski/random-simulation";
+        private const string GIT_HUB_ADDRESS = "https://github.com/pawel-trzcinski/f-queue";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AddGitHubHeaderAttribute"/> class.

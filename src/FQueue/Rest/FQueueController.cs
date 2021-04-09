@@ -1,4 +1,5 @@
 ﻿using FQueue.Health;
+using FQueue.Logic;
 using FQueue.Rest.HeaderAttributes;
 using FQueue.Rest.SwaggerAttributes;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,17 @@ namespace FQueue.Rest
         protected FQueueController(IHealthChecker healthChecker)
         {
             this._healthChecker = healthChecker;
+        }
+
+        protected T ConsumeResult<T>(ExecutorResult<T> executorResult)
+        {
+            HttpContext.Response.StatusCode = (int)executorResult.Status;
+            return executorResult.ReturnData;
+        }
+
+        protected void ConsumeResult(ExecutorResult executorResult)
+        {
+            HttpContext.Response.StatusCode = (int)executorResult.Status;
         }
 
         /// <summary>

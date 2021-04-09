@@ -6,8 +6,10 @@ namespace FQueue.Rest.SwaggerAttributes
     public class QueueDeadResponseAttribute : SwaggerResponseAttribute
     {
 #warning TODO - unit tests
+        public const HttpStatusCode CODE = HttpStatusCode.Gone;
+
         public QueueDeadResponseAttribute()
-            : base((int)HttpStatusCode.Gone)
+            : base((int)CODE)
         {
             Description = "The queue is in a **dead** state.";
         }

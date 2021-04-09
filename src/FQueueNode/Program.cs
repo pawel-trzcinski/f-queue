@@ -19,7 +19,7 @@ namespace FQueueNode
 #warning TODO - w każdym repozytorium jest plik z wersją (Guid;czas UTC;bieżący plik bazy; bieżący wskaźnik w pliku; ostatni plik bazy; wskaźnik ostatniego elementu) node przy każdej operacji czyta plik z wersją i porównuje pierwszy element; jak różne, to resetuje bufor w pamięci
 #warning TODO - w każdej kolejce jest plik, który mówi jaka jest struktura katalogów (ile cyfr w plikach, w wew. katalogach i zew. katalogach); mówi też o nazie choć nie musi; są to wartości niezmienne tworzone w czasie tworzenia kolejki;
 #warning TODO - FE ma w pamięci info o wszystkich kolejkach
-#warning TODO - BE ma file watchera na każdym pliku info o kolejce. Jak się cokolwiek zmieni w nim w czasie działąnia BE, to znaczy, że ktoś źle zrobił ręcznie i jest FATA error i wsio zatrzymujemy
+#warning TODO - BE ma file watchera na każdym pliku info o kolejce. Jak się cokolwiek zmieni w nim w czasie działąnia BE, to znaczy, że ktoś źle zrobił ręcznie i jest FATAL error i wsio zatrzymujemy
 #warning TODO - FE tylko i wyłącznie robią proste operacje na kolejkach - peek, enqueue i dequeue
 #warning TODO - BE służą do synchronizacji dostępu do kolejek
 

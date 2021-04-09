@@ -8,7 +8,7 @@
         /// <summary>
         /// Reads configuration from appsettings.json file.
         /// </summary>
-        /// <returns>Bussiness configuration of the RandomSimulation.</returns>
+        /// <returns>Configuration of the FQueue.</returns>
         FQueueConfiguration Configuration { get; }
     }
 }

@@ -6,8 +6,10 @@ namespace FQueue.Rest.SwaggerAttributes
     public class RejectedByThrottlingResponseAttribute : SwaggerResponseAttribute
     {
 #warning TODO - unit tests
+        public const HttpStatusCode CODE = HttpStatusCode.TooManyRequests;
+
         public RejectedByThrottlingResponseAttribute()
-            : base((int)HttpStatusCode.TooManyRequests)
+            : base((int) CODE)
         {
             Description = "FQueue REST throttling rejected the call.";
         }

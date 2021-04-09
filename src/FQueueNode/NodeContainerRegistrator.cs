@@ -1,6 +1,7 @@
 ﻿using FQueue;
 using FQueue.Rest;
 using FQueue.Watchdog;
+using FQueueNode.Logic;
 using FQueueNode.Rest;
 using FQueueNode.Watchdog;
 using log4net;
@@ -18,6 +19,8 @@ namespace FQueueNode
 
             Container container = CommonContainerRegistrator.Register();
 
+            container.Register<INodeQueueManager, NodeQueueManager>(Lifestyle.Singleton);
+            container.Register<IRestExecutor, RestExecutor>(Lifestyle.Scoped);
             container.Register<IFQueueController, NodeController>(Lifestyle.Scoped);
 
             container.RegisterSingleton<IWatchdogThread, NodeWatchdogThread>();

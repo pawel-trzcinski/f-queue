@@ -5,20 +5,19 @@ using FQueue.Health;
 using FQueue.Models;
 using FQueue.Rest;
 using FQueue.Rest.SwaggerAttributes;
+using FQueueNode.Logic;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace FQueueNode.Rest
 {
-    /// <summary>
-    /// Default RandomSimulation controller.
-    /// </summary>
     [Route(Engine.FQUEUE + "/" + NODE)]
     [RejectedByThrottlingResponse]
     public class NodeController : FQueueController, INodeController
     {
 #warning TODO - unit tests
 #warning TODO - unit tests - każdy, znaleziony przez reflekcję SwaggerResponse, musi mieć unikalny kod
-        
+#warning TODO - atrybut łapania niezłapanych wyjątków i zwracania 500
+#warning TODO - unit tests - kady LogicResult ma odpowiednik w SwaggerAttribute i maj ten sam kod błędu (oprócz Throttling, bo to niżej się dzieje)
         public const string NODE = "node";
         public const string METHOD_DEQUEUE = "dequeue";
         public const string METHOD_COUNT = "count";
@@ -27,9 +26,12 @@ namespace FQueueNode.Rest
         public const string METHOD_ENQUEUE = "enqueue";
         public const string METHOD_BACKUP = "backup";
 
-        public NodeController(IHealthChecker healthChecker)
+        private readonly IRestExecutor _restExecutor;
+
+        public NodeController(IHealthChecker healthChecker, IRestExecutor restExecutor)
             : base(healthChecker)
         {
+            _restExecutor = restExecutor;
         }
 
         [HttpGet(QUEUE_NAME_PATH_TEMPLATE + "/" + METHOD_DEQUEUE)]
@@ -54,8 +56,7 @@ namespace FQueueNode.Rest
                 count = 1;
             }
 
-#warning TODO
-            return null;
+            return ConsumeResult(_restExecutor.Dequeue(queueName, count, checkCount));
         }
 
         [HttpGet(QUEUE_NAME_PATH_TEMPLATE + "/" + METHOD_COUNT)]
@@ -68,8 +69,7 @@ namespace FQueueNode.Rest
         [QueueDeadResponse]
         public string Count([FromRoute] [QueueNameParameter] string queueName)
         {
-#warning TODO
-            return 0.ToString();
+            return ConsumeResult(_restExecutor.Count(queueName));
         }
 
         [HttpGet(QUEUE_NAME_PATH_TEMPLATE + "/" + METHOD_PEEK)]
@@ -82,8 +82,7 @@ namespace FQueueNode.Rest
         [QueueDeadResponse]
         public string Peek([FromRoute] [QueueNameParameter] string queueName)
         {
-#warning TODO
-            return null;
+            return ConsumeResult(_restExecutor.Peek(queueName));
         }
 
         [HttpGet(QUEUE_NAME_PATH_TEMPLATE + "/" + METHOD_PEEK + "/" + METHOD_TAG)]
@@ -96,8 +95,7 @@ namespace FQueueNode.Rest
         [QueueDeadResponse]
         public string PeekTag([FromRoute] [QueueNameParameter] string queueName)
         {
-#warning TODO
-            return null;
+            return ConsumeResult(_restExecutor.PeekTag(queueName));
         }
 
         [HttpPost(QUEUE_NAME_PATH_TEMPLATE + "/" + METHOD_ENQUEUE)]
@@ -107,11 +105,10 @@ namespace FQueueNode.Rest
         [MaintenancePendingResponse]
         [SuccessResponse]
         [QueueDeadResponse]
-        public StatusCodeResult Enqueue
+        public void Enqueue
         (
             [FromRoute] [QueueNameParameter] string queueName,
-            [FromBody]
-            [SwaggerRequestBody(Description = "JSON object or JSON array of objects that are to be enqueued. Every objects must have **Tag** field defined. Any other JSON structure may be added inside the object.", Required = true)]
+            [FromBody] [SwaggerRequestBody(Description = "JSON object or JSON array of objects that are to be enqueued. Every objects must have **Tag** field defined. Any other JSON structure may be added inside the object.", Required = true)]
             // this parameter is for swagger documentation only
             TagObject entry
         )
@@ -121,14 +118,13 @@ namespace FQueueNode.Rest
                 HttpContext.Request.Body.Seek(0, SeekOrigin.Begin);
             }
 
-            string entryString;
+            string body;
             using (StreamReader reader = new StreamReader(HttpContext.Request.BodyReader.AsStream()))
             {
-                entryString = reader.ReadToEnd();
+                body = reader.ReadToEnd();
             }
 
-#warning TODO
-            return null;
+            ConsumeResult(_restExecutor.Enqueue(queueName, body));
         }
 
         [HttpGet(QUEUE_NAME_PATH_TEMPLATE + "/" + METHOD_BACKUP)]
@@ -146,8 +142,7 @@ namespace FQueueNode.Rest
             string filename
         )
         {
-#warning TODO - jak bez nazwy pliku, to standardowa nazwa - zwraca ścieżkę, gdzie backup został zrobiony
-            return null;
+            return ConsumeResult(_restExecutor.Backup(queueName, filename));
         }
 
         [HttpGet(METHOD_BACKUP)]
@@ -162,8 +157,7 @@ namespace FQueueNode.Rest
             string folder
         )
         {
-#warning TODO - jak bez nazwy foldery, to standardowa nazwa - zwraca ścieżkę, gdzie backupy zostały zrobione
-            return null;
+            return ConsumeResult(_restExecutor.BackupAll(folder));
         }
     }
 }

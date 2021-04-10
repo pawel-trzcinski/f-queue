@@ -7,12 +7,11 @@ namespace FQueueNode.Logic
     /// </summary>
     public interface IRestExecutor
     {
-        ExecutorResult<string> Dequeue(string queueName, int count, bool checkCount);
-        ExecutorResult<string> Count(string queueName);
-        ExecutorResult<string> Peek(string queueName);
-        ExecutorResult<string> PeekTag(string queueName);
-        ExecutorResult Enqueue(string queueName, string requestBody);
-        ExecutorResult<string> Backup(string queueName, string filename);
-        ExecutorResult<string> BackupAll(string folder);
+        LogicResult Dequeue(string queueName, int count, bool checkCount);
+        LogicResult Count(string queueName);
+        LogicResult Peek(string queueName);
+        LogicResult PeekTag(string queueName);
+        LogicResult Enqueue(string queueName, string requestBody);
+        LogicResult Backup(string queueName, string filename);
     }
 }

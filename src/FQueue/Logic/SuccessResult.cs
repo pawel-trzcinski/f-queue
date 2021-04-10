@@ -1,20 +1,18 @@
-﻿using FQueue.Rest.SwaggerAttributes;
+﻿using System;
+using FQueue.Rest.SwaggerAttributes;
 
 namespace FQueue.Logic
 {
-    public class SuccessResult<T> : ExecutorResult<T>
-    {
-        public SuccessResult(T returnData)
-            : base(SuccessResponseAttribute.CODE, returnData)
-        {
-        }
-    }
-
-    public class SuccessResult : ExecutorResult
+    public class SuccessResult : LogicResult
     {
         public SuccessResult()
             : base(SuccessResponseAttribute.CODE)
         {
+        }
+
+        public override string DataToString()
+        {
+            return String.Empty;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using FQueue.Models;
 using FQueue.Rest;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FQueueNode.Rest
 {
@@ -12,6 +11,5 @@ namespace FQueueNode.Rest
         string PeekTag(string queueName);
         void Enqueue(string queueName, TagObject entry);
         string Backup(string queueName, string filename);
-        string BackupAll([FromQuery] string folder);
     }
 }

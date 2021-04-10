@@ -9,7 +9,6 @@ using FQueue.DateTime;
 using FQueue.FileSystem;
 using FQueue.FileSystem.VersionFile;
 using FQueue.Health;
-using FQueue.QueueLockContext;
 using FQueue.Rest;
 using FQueue.Watchdog.Checkers;
 using SimpleInjector;
@@ -51,7 +50,6 @@ namespace FQueue
             container.RegisterSingleton<ICommandChain, CommandChain>();
 
             container.RegisterSingleton<IQueueContextFactory, QueueContextFactory>();
-            container.RegisterSingleton<ILockContextFactory, LockContextFactory>();
 
             container.RegisterSingleton<IDataProtocolFactory, DataProtocolFactory>();
             container.Collection.Register

@@ -5,7 +5,6 @@ namespace FQueue.Rest.SwaggerAttributes
 {
     public class QueueNotFoundResponseAttribute : SwaggerResponseAttribute
     {
-#warning TODO - unit tests
         public const HttpStatusCode CODE = HttpStatusCode.NotFound;
 
         public QueueNotFoundResponseAttribute()

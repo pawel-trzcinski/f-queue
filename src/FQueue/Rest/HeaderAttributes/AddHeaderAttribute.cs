@@ -8,7 +8,6 @@ namespace FQueue.Rest.HeaderAttributes
     /// </summary>
     public abstract class AddHeaderAttribute : ResultFilterAttribute
     {
-#warning TODO - unit tests
         private readonly string _name;
         private readonly string _value;
 

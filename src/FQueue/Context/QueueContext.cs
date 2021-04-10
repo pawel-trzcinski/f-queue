@@ -1,7 +1,11 @@
 ﻿using System;
+using System.IO;
 
 namespace FQueue.Context
 {
+    /// <summary>
+    /// Object that is used to locally lock execution and keep information on queue. This is a singleton.
+    /// </summary>
     [Serializable]
     public class QueueContext
     {
@@ -15,6 +19,12 @@ namespace FQueue.Context
         public override string ToString()
         {
             return $"QueueName: {QueueName}";
+        }
+
+        public string GetDefaultBackupFile(string backupFolder)
+        {
+#warning TODO - unit tests
+            return Path.Combine(backupFolder, $"{QueueName}.bak");
         }
     }
 }

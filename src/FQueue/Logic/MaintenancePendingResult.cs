@@ -1,20 +1,18 @@
-﻿using FQueue.Rest.SwaggerAttributes;
+﻿using System;
+using FQueue.Rest.SwaggerAttributes;
 
 namespace FQueue.Logic
 {
-    public class MaintenancePendingResult<T> : ExecutorResult<T>
-    {
-        public MaintenancePendingResult()
-            : base(MaintenancePendingResponseAttribute.CODE, default)
-        {
-        }
-    }
-
-    public class MaintenancePendingResult : ExecutorResult
+    public class MaintenancePendingResult : LogicResult
     {
         public MaintenancePendingResult()
             : base(MaintenancePendingResponseAttribute.CODE)
         {
+        }
+
+        public override string DataToString()
+        {
+            return String.Empty;
         }
     }
 }

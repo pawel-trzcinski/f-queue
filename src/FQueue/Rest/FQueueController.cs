@@ -1,4 +1,5 @@
-﻿using FQueue.Health;
+﻿using System;
+using FQueue.Health;
 using FQueue.Logic;
 using FQueue.Rest.HeaderAttributes;
 using FQueue.Rest.SwaggerAttributes;
@@ -26,15 +27,10 @@ namespace FQueue.Rest
             this._healthChecker = healthChecker;
         }
 
-        protected T ConsumeResult<T>(ExecutorResult<T> executorResult)
+        protected string ConsumeResult(LogicResult result)
         {
-            HttpContext.Response.StatusCode = (int)executorResult.Status;
-            return executorResult.ReturnData;
-        }
-
-        protected void ConsumeResult(ExecutorResult executorResult)
-        {
-            HttpContext.Response.StatusCode = (int)executorResult.Status;
+            HttpContext.Response.StatusCode = (int) result.Status;
+            return result.IsOk && result.ShouldHaveData ? result.DataToString() : String.Empty;
         }
 
         /// <summary>

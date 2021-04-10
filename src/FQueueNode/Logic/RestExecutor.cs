@@ -1,5 +1,10 @@
-﻿using FQueue.Context;
+﻿using System;
+using System.Linq;
+using FQueue.Configuration;
+using FQueue.Context;
 using FQueue.Logic;
+using FQueue.Models;
+using Newtonsoft.Json.Linq;
 
 namespace FQueueNode.Logic
 {
@@ -8,59 +13,79 @@ namespace FQueueNode.Logic
     /// </summary>
     public class RestExecutor : IRestExecutor
     {
+#warning TODO - unit tests
+        private readonly IConfigurationReader _configurationReader;
         private readonly IQueueContextFactory _queueContextFactory;
         private readonly INodeQueueManager _nodeQueueManager;
 
-        public RestExecutor(IQueueContextFactory queueContextFactory, INodeQueueManager nodeQueueManager)
+        public RestExecutor(IConfigurationReader configurationReader, IQueueContextFactory queueContextFactory, INodeQueueManager nodeQueueManager)
         {
+            _configurationReader = configurationReader;
             _queueContextFactory = queueContextFactory;
             _nodeQueueManager = nodeQueueManager;
         }
 
-        public ExecutorResult<string> Dequeue(string queueName, int count, bool checkCount)
+        private T LockLocallyWithContext<T>(string queueName, Func<QueueContext, T> action)
         {
-#warning TODO
-            throw new System.NotImplementedException();
+            QueueContext context = _queueContextFactory.GetContext(queueName);
+
+            lock (context)
+            {
+                return action(context);
+            }
         }
 
-        public ExecutorResult<string> Count(string queueName)
+        public LogicResult Dequeue(string queueName, int count, bool checkCount)
         {
-#warning TODO
-            throw new System.NotImplementedException();
+            return LockLocallyWithContext(queueName, context => _nodeQueueManager.Dequeue(context, count, checkCount));
         }
 
-        public ExecutorResult<string> Peek(string queueName)
+        public LogicResult Count(string queueName)
         {
-#warning TODO
-            throw new System.NotImplementedException();
+            return LockLocallyWithContext(queueName, context => _nodeQueueManager.Count(context));
         }
 
-        public ExecutorResult<string> PeekTag(string queueName)
+        public LogicResult Peek(string queueName)
         {
-#warning TODO
-            throw new System.NotImplementedException();
+            return LockLocallyWithContext(queueName, context => _nodeQueueManager.Peek(context));
         }
 
-        public ExecutorResult Enqueue(string queueName, string requestBody)
+        public LogicResult PeekTag(string queueName)
         {
-#warning TODO
-            throw new System.NotImplementedException();
+            return LockLocallyWithContext(queueName, context => _nodeQueueManager.PeekTag(context));
         }
 
-        public ExecutorResult<string> Backup(string queueName, string filename)
+        public LogicResult Enqueue(string queueName, string requestBody)
         {
-#warning TODO
-#warning TODO - jak bez nazwy pliku, to standardowa nazwa - zwraca ścieżkę, gdzie backup został zrobiony
+            return LockLocallyWithContext(queueName, context =>
+            {
+                if (String.IsNullOrWhiteSpace(requestBody))
+                {
+                    return new SuccessResult();
+                }
 
-            throw new System.NotImplementedException();
+                JToken token = JToken.Parse(requestBody);
+
+                QueueEntry[] entries =
+                    token.Type == JTokenType.Array
+                        ? token.Children().Select(p => QueueEntry.FromRequestString(context, p.ToString(), _configurationReader.Configuration.Files.DataFileMaximumSizeB)).ToArray()
+                        : new[] {QueueEntry.FromRequestString(context, token.ToString(), _configurationReader.Configuration.Files.DataFileMaximumSizeB)};
+
+                return _nodeQueueManager.Enqueue(context, entries);
+            });
         }
 
-        public ExecutorResult<string> BackupAll(string folder)
+        public LogicResult Backup(string queueName, string filename)
         {
-#warning TODO
-#warning TODO - jak bez nazwy foldery, to standardowa nazwa - zwraca ścieżkę, gdzie backupy zostały zrobione
+            return LockLocallyWithContext(queueName, context =>
+            {
+                if (String.IsNullOrWhiteSpace(filename))
+                {
+                    filename = context.GetDefaultBackupFile(_configurationReader.Configuration.Files.BackupFolder);
+                }
 
-            throw new System.NotImplementedException();
+                return _nodeQueueManager.Backup(context, filename);
+            });
         }
     }
 }

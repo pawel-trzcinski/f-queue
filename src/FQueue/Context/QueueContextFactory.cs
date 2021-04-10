@@ -11,7 +11,7 @@ namespace FQueue.Context
             return _contextDictionary.GetOrAdd(queueName, CreateNewContext);
         }
 
-        private QueueContext CreateNewContext(string queueName)
+        private static QueueContext CreateNewContext(string queueName)
         {
             return new QueueContext(queueName);
         }

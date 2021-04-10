@@ -144,20 +144,5 @@ namespace FQueueNode.Rest
         {
             return ConsumeResult(_restExecutor.Backup(queueName, filename));
         }
-
-        [HttpGet(METHOD_BACKUP)]
-        [Produces(ContentTypes.TEXT_PLAIN)]
-        [SwaggerOperation(Summary = "Backup all queues.")]
-        [SuccessResponse("Returns folder in which backup files were stored.")]
-        [BackupPendingResponse]
-        [MaintenancePendingResponse]
-        public string BackupAll
-        (
-            [FromQuery] [SwaggerParameter(Description = "Folder path which all queues will be backed up to. The path must be accesible to FQueue node. If *folder* is absent, default one will be used.", Required = false)]
-            string folder
-        )
-        {
-            return ConsumeResult(_restExecutor.BackupAll(folder));
-        }
     }
 }

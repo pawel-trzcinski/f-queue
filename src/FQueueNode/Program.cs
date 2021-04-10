@@ -61,6 +61,8 @@ namespace FQueueNode
     //  - 
 #warning TODO - REST method - Version. Jak się synchronizują, to tylko z taką samą wersją
 #warning TODO - REST method - stan repozytoriów - lista i czy są aktywne czy się synchronizują czy może są kaput
+
+#warning TODO - jak się zachce, to BackupAll
     public static class Program
     {
         private static ILog _log = LogManager.GetLogger(typeof(Program));

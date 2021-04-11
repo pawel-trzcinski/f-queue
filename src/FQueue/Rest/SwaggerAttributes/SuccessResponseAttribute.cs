@@ -6,7 +6,6 @@ namespace FQueue.Rest.SwaggerAttributes
 {
     public class SuccessResponseAttribute : SwaggerResponseAttribute
     {
-#warning TODO - unit tests
         public const HttpStatusCode CODE = HttpStatusCode.OK;
 
         public SuccessResponseAttribute(string appendedDescription = null)

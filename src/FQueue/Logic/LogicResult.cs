@@ -4,7 +4,6 @@ namespace FQueue.Logic
 {
     public abstract class LogicResult
     {
-#warning TODO - unit tests
         public HttpStatusCode Status { get; }
 
         public bool ShouldHaveData { get; }

@@ -4,7 +4,6 @@ namespace FQueue.Logic
 {
     public class CountResult : SuccessResult
     {
-#warning TODO - unit tests
         private readonly int _count;
 
         public CountResult(int count)

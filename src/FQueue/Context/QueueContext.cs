@@ -23,7 +23,6 @@ namespace FQueue.Context
 
         public string GetDefaultBackupFile(string backupFolder)
         {
-#warning TODO - unit tests
             return Path.Combine(backupFolder, $"{QueueName}.bak");
         }
     }

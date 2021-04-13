@@ -6,8 +6,6 @@ namespace FQueue.Data
 {
     public class DataProtocolFactory : IDataProtocolFactory
     {
-#warning TODO - unit tests
-
         private readonly Container _container;
 
         public DataProtocolFactory(Container container)
@@ -17,7 +15,6 @@ namespace FQueue.Data
 
         public IDataProtocol GetProtocol(DataProtocolVersion dataProtocolVersion)
         {
-#warning TEST
             IDataProtocol protocol = _container.GetAllInstances<IDataProtocol>().SingleOrDefault(p => p.Version == dataProtocolVersion);
 
             if (protocol == null)

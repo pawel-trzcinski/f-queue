@@ -13,7 +13,6 @@ namespace FQueueNode.Logic
     /// </summary>
     public class RestExecutor : IRestExecutor
     {
-#warning TODO - unit tests
         private readonly IConfigurationReader _configurationReader;
         private readonly IQueueContextFactory _queueContextFactory;
         private readonly INodeQueueManager _nodeQueueManager;
@@ -25,7 +24,7 @@ namespace FQueueNode.Logic
             _nodeQueueManager = nodeQueueManager;
         }
 
-        private T LockLocallyWithContext<T>(string queueName, Func<QueueContext, T> action)
+        protected virtual T LockLocallyWithContext<T>(string queueName, Func<QueueContext, T> action)
         {
             QueueContext context = _queueContextFactory.GetContext(queueName);
 
